@@ -5,6 +5,11 @@ public class Event<T>
     private T content;
     private boolean hasBeenHandled = false;
     
+    public Event(T content)
+    {
+        this.content = content;
+    }
+    
     /**
      * Returns the content and prevents its use again.
      */
