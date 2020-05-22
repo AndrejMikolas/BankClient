@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-abstract class BaseEntity implements Serializable
+public abstract class BaseEntity implements Serializable
 {
     private String id;
 }
