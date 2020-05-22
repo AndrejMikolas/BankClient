@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BankClient</string>
+    <string name="user_name">%$1s %$2s</string>
+    <string name="user_icon_avatar">User icon avatar</string>
 </resources>
