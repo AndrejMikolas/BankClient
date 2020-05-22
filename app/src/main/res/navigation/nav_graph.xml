@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/accountsListFragment">
 
+    <fragment
+        android:id="@+id/accountsListFragment"
+        android:name="sk.andrejmik.bankclient.fragments.AccountsListFragment"
+        android:label="accounts_list_fragment"
+        tools:layout="@layout/accounts_list_fragment" >
+        <action
+            android:id="@+id/action_accountsListFragment_to_accountDetailFragment"
+            app:destination="@id/accountDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountDetailFragment"
+        android:name="sk.andrejmik.bankclient.fragments.AccountDetailFragment"
+        android:label="account_detail_fragment"
+        tools:layout="@layout/account_detail_fragment" />
 </navigation>
