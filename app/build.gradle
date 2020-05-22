@@ -21,6 +21,7 @@ android {
         }
     }
 
+    dataBinding.enabled = true
 }
 
 dependencies {
@@ -33,4 +34,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    //Fragments
+    implementation 'androidx.fragment:fragment-ktx:1.2.4'
+    //Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0-beta01'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0-beta01'
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
