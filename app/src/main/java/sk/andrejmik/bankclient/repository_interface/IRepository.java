@@ -1,9 +1,8 @@
 package sk.andrejmik.bankclient.repository_interface;
 
-import android.database.Observable;
-
 import java.util.List;
 
+import io.reactivex.Observable;
 import sk.andrejmik.bankclient.objects.BaseEntity;
 
 public interface IRepository<T extends BaseEntity>
