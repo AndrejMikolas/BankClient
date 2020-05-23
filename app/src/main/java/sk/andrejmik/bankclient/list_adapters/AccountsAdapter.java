@@ -22,6 +22,11 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
         mAccountList = accountList;
     }
     
+    public List<Account> getAccountList()
+    {
+        return mAccountList;
+    }
+    
     @NonNull
     @Override
     public AccountsAdapter.AccountViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)

@@ -36,7 +36,7 @@ public class ApiAccountRepository implements IAccountRepository
     @Override
     public Observable<List<Account>> getAll()
     {
-        String requestUrl = "http://192.168.0.32:8080/accounts/list";//resourceUrl.plus("?page=$page&per_page=$perPage")
+        String requestUrl = "http://192.168.0.15:8080/accounts/list";//resourceUrl.plus("?page=$page&per_page=$perPage")
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder().url(requestUrl).get().build();
     
