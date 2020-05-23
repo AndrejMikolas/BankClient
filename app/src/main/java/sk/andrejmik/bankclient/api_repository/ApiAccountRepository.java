@@ -27,23 +27,19 @@ import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 
 public class ApiAccountRepository implements IAccountRepository
 {
+    private static final String API_URL = "http://192.168.0.15:8080";
+    
     @Override
     public Observable<Account> get(Object id)
     {
-        return null;
-    }
-    
-    @Override
-    public Observable<List<Account>> getAll()
-    {
-        String requestUrl = "http://192.168.0.15:8080/accounts/list";//resourceUrl.plus("?page=$page&per_page=$perPage")
+        String requestUrl = API_URL + "/accounts/detail/" + id.toString();
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder().url(requestUrl).get().build();
-    
-        return Observable.create(new ObservableOnSubscribe<List<Account>>()
+        
+        return Observable.create(new ObservableOnSubscribe<Account>()
         {
             @Override
-            public void subscribe(final ObservableEmitter<List<Account>> emitter) throws Exception
+            public void subscribe(final ObservableEmitter<Account> emitter)
             {
                 client.newCall(request).enqueue(new Callback()
                 {
@@ -52,15 +48,53 @@ public class ApiAccountRepository implements IAccountRepository
                     {
                         emitter.onError(e);
                     }
-    
+                    
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
                     {
                         if (response.isSuccessful())
                         {
                             String jsonBody = Objects.requireNonNull(response.body()).string();
-                            //val jObject = JSONObject(jsonBody);
-                            //val jArray = jObject.getJSONArray("data");
+                            Account result = new Gson().fromJson(jsonBody, Account.class);
+                            emitter.onNext(result);
+                            emitter.onComplete();
+                        }
+                        else
+                        {
+                            emitter.onError(new IllegalStateException("${response.code}"));
+                        }
+                    }
+                });
+            }
+        }).timeout(10, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
+    }
+    
+    @Override
+    public Observable<List<Account>> getAll()
+    {
+        String requestUrl = API_URL + "/accounts/list";
+        final OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder().url(requestUrl).get().build();
+        
+        return Observable.create(new ObservableOnSubscribe<List<Account>>()
+        {
+            @Override
+            public void subscribe(final ObservableEmitter<List<Account>> emitter)
+            {
+                client.newCall(request).enqueue(new Callback()
+                {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e)
+                    {
+                        emitter.onError(e);
+                    }
+                    
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
+                    {
+                        if (response.isSuccessful())
+                        {
+                            String jsonBody = Objects.requireNonNull(response.body()).string();
                             Type listType = new TypeToken<ArrayList<Account>>()
                             {
                             }.getType();
@@ -77,32 +111,6 @@ public class ApiAccountRepository implements IAccountRepository
             }
         }).timeout(10, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
-//        return Observable.create < List < Account >> {
-//                emitter -> client.newCall(request).enqueue(object :Callback {
-//        override fun onFailure(call:Call, e:IOException)
-//        {
-//            emitter.onError(e)
-//        }
-//
-//        override fun onResponse(call:Call, response:Response)
-//        {
-//            if (response.isSuccessful)
-//            {
-//                val jsonBody = response.body ?.string() val jObject = JSONObject(jsonBody) val jArray = jObject.getJSONArray("data")
-//                val usersType = object :TypeToken<List<User?>?>() {
-//            }.type val result = Gson().fromJson < List < User >> (jArray.toString(), usersType)
-//                emitter.onNext(result) emitter.onComplete()
-//            }
-//            else
-//            {
-//                emitter.onError(IllegalStateException("${response.code}"))
-//            }
-//        }
-//    })
-//        emitter.setCancellable {
-//    }
-//        }.timeout(10, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation())
-//    }
     
     @Override
     public void save(Account data)
