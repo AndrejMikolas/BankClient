@@ -25,11 +25,10 @@ import sk.andrejmik.bankclient.utils.RecyclerTouchListener;
 public class AccountsListFragment extends Fragment
 {
     private AccountsListFragmentBinding mBinding;
-    private View mRootView;
     private Fragment mFragment;
     private AccountsListViewModel mViewModel;
     private AccountsAdapter mAccountsAdapter;
-    private Observer<List<Account>> userListUpdateObserver = new Observer<List<Account>>()
+    private Observer<List<Account>> mAccountListUpdateObserver = new Observer<List<Account>>()
     {
         @Override
         public void onChanged(List<Account> accountsArrayList)
@@ -49,8 +48,7 @@ public class AccountsListFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.accounts_list_fragment, container, false);
-        mRootView = mBinding.getRoot();
-        return mRootView;
+        return mBinding.getRoot();
     }
     
     @Override
@@ -58,8 +56,7 @@ public class AccountsListFragment extends Fragment
     {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(AccountsListViewModel.class);
-        // TODO: Use the ViewModel
-        mViewModel.getAccountsLiveData().observe(getViewLifecycleOwner(), userListUpdateObserver);
+        mViewModel.getAccountsLiveData().observe(getViewLifecycleOwner(), mAccountListUpdateObserver);
         registerListItemClickListener();
     }
     
@@ -73,7 +70,7 @@ public class AccountsListFragment extends Fragment
                     {
                         Account account = mAccountsAdapter.getAccountList().get(position);
                         Bundle bundle = new Bundle();
-                        bundle.putString("userId", account.getId());
+                        bundle.putString("account_id", account.getId());
                         NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountsListFragment_to_accountDetailFragment, bundle);
                     }
                 }));

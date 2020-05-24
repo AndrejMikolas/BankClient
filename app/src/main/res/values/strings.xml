@@ -2,4 +2,6 @@
     <string name="app_name">BankClient</string>
     <string name="user_name">%1$s %2$s</string>
     <string name="user_icon_avatar">User icon avatar</string>
+    <string name="account_name">Account name</string>
+    <string name="created_on">Created on</string>
 </resources>
