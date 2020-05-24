@@ -2,4 +2,11 @@
     <string name="app_name">BankClient</string>
     <string name="user_name">%1$s %2$s</string>
     <string name="user_icon_avatar">User icon avatar</string>
+    <string name="account_name">Account name</string>
+    <string name="created_on">Created on</string>
+    <string name="owner">Owner</string>
+    <string name="born">Born</string>
+    <string name="cards">Cards</string>
+    <string name="card_expires">Expires %1$02d / %2$02d</string>
+    <string name="expired">expired</string>
 </resources>
