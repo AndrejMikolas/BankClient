@@ -4,4 +4,7 @@
     <string name="user_icon_avatar">User icon avatar</string>
     <string name="account_name">Account name</string>
     <string name="created_on">Created on</string>
+    <string name="owner">Owner</string>
+    <string name="born">Born</string>
+    <string name="cards">Cards</string>
 </resources>
