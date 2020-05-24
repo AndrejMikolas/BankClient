@@ -7,4 +7,5 @@
     <string name="owner">Owner</string>
     <string name="born">Born</string>
     <string name="cards">Cards</string>
+    <string name="card_expires">Expires %1$02d / %2$02d</string>
 </resources>
