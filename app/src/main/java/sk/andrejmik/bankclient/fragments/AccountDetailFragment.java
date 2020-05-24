@@ -11,9 +11,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import sk.andrejmik.bankclient.R;
 import sk.andrejmik.bankclient.databinding.AccountDetailFragmentBinding;
+import sk.andrejmik.bankclient.list_adapters.CardsListAdapter;
 import sk.andrejmik.bankclient.objects.Account;
 
 public class AccountDetailFragment extends Fragment
@@ -21,12 +23,16 @@ public class AccountDetailFragment extends Fragment
     private AccountDetailViewModel mViewModel;
     private AccountDetailFragmentBinding mBinding;
     private String mAccountId;
+    private CardsListAdapter mCardsListAdapter;
     private Observer<Account> mAccountObserver = new Observer<Account>()
     {
         @Override
         public void onChanged(Account account)
         {
             mBinding.setAccount(account);
+            mCardsListAdapter = new CardsListAdapter(account.getCardsList(), account.getOwner());
+            mBinding.recyclerviewCards.setLayoutManager(new LinearLayoutManager(getContext()));
+            mBinding.recyclerviewCards.setAdapter(mCardsListAdapter);
         }
     };
     

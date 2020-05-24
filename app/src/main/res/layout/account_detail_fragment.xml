@@ -13,13 +13,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
         tools:context=".fragments.AccountDetailFragment">
 
         <TableLayout
             android:id="@+id/table_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:padding="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -92,22 +93,6 @@
                     tools:text="01.01.1990" />
             </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp">
-
-                <TextView
-                    style="@style/account_detail_key"
-                    android:drawableStart="@drawable/ic_credit_card_black_24dp"
-                    android:text="@string/cards" />
-
-                <Space
-                    android:id="@+id/cards_count"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </TableRow>
         </TableLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -123,6 +108,7 @@
             android:id="@+id/floatingActionButton_add_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
