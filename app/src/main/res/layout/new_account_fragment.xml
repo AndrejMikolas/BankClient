@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="account"
+            type="android.accounts.Account" />
+
+        <variable
+            name="owner"
+            type="sk.andrejmik.bankclient.objects.Person" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        tools:context=".fragments.NewAccountFragment">
+
+        <TextView
+            style="@style/section_header"
+            android:text="@string/account_info" />
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/account_name"
+                android:text="@={account.name}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            style="@style/section_header"
+            android:text="@string/owner_info" />
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:text="@={owner.name}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/surname"
+                android:text="@={owner.surname}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout style="@style/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/born"
+                android:text="@={owner.born.toString()}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            style="@style/section_header"
+            android:text="@string/cards" />
+
+        <ListView
+            android:id="@+id/listview_new_cards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!--    <LinearLayout-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:orientation="horizontal"-->
+        <!--        android:baselineAligned="false">-->
+
+        <!--        <com.google.android.material.textfield.TextInputLayout-->
+        <!--            style="@style/textInputLayout"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_weight="1">-->
+
+        <!--            <com.google.android.material.textfield.TextInputEditText-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:hint="@string/expiration_month" />-->
+        <!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <!--        <com.google.android.material.textfield.TextInputLayout-->
+        <!--            style="@style/textInputLayout"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_weight="1">-->
+
+        <!--            <com.google.android.material.textfield.TextInputEditText-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:hint="@string/expiration_year" />-->
+        <!--        </com.google.android.material.textfield.TextInputLayout>-->
+        <!--    </LinearLayout>-->
+
+        <Button
+            style="@style/primary_button"
+            android:text="@string/add_card" />
+
+    </LinearLayout>
+</layout>

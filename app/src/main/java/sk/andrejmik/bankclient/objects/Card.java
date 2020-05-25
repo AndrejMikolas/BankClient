@@ -1,5 +1,7 @@
 package sk.andrejmik.bankclient.objects;
 
+import androidx.annotation.NonNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +34,7 @@ public class Card extends BaseEntity
     
     public boolean getIsExpired()
     {
-        String input = String.format(Locale.getDefault(), "%02d/%02d", expirationMonth+1, expirationYear);
+        String input = String.format(Locale.getDefault(), "%02d/%02d", expirationMonth + 1, expirationYear);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/yy", Locale.getDefault());
         simpleDateFormat.setLenient(false);
         Date expiry = null;
@@ -45,5 +47,12 @@ public class Card extends BaseEntity
             return false;
         }
         return expiry.before(new Date());
+    }
+    
+    @NonNull
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.getDefault(), "%s - %02d/%02d", getCardNoFormatted(), expirationMonth + 1, expirationYear);
     }
 }

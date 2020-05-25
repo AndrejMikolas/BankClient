@@ -18,5 +18,13 @@
         android:id="@+id/accountDetailFragment"
         android:name="sk.andrejmik.bankclient.fragments.AccountDetailFragment"
         android:label="account_detail_fragment"
-        tools:layout="@layout/account_detail_fragment" />
+        tools:layout="@layout/account_detail_fragment" >
+        <action
+            android:id="@+id/action_accountDetailFragment_to_newAccountFragment"
+            app:destination="@id/newAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAccountFragment"
+        android:name="sk.andrejmik.bankclient.fragments.NewAccountFragment"
+        android:label="NewAccountFragment" />
 </navigation>
