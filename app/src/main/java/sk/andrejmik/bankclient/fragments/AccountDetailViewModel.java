@@ -9,9 +9,9 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import sk.andrejmik.bankclient.api_repository.ApiAccountRepository;
 import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
+import sk.andrejmik.bankclient.repository_interface.RepositoryFactory;
 import sk.andrejmik.bankclient.utils.Event;
 import sk.andrejmik.bankclient.utils.NetworkHelper;
 
@@ -25,7 +25,7 @@ public class AccountDetailViewModel extends ViewModel
     private AccountDetailViewModel(String param)
     {
         mParam = param;
-        mAccountRepository = new ApiAccountRepository();
+        mAccountRepository = RepositoryFactory.getAccountRepository();
         mAccountLiveData = new MutableLiveData<>();
         loadAccount(mParam);
     }

@@ -9,4 +9,12 @@
     <string name="cards">Cards</string>
     <string name="card_expires">Expires %1$02d / %2$02d</string>
     <string name="expired">expired</string>
+    <string name="account_info">Account info</string>
+    <string name="owner_info">Owner info</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="expiration_month">Expiration month</string>
+    <string name="expiration_year">Expiration year</string>
+    <string name="add_card">Add card</string>
+    <string name="save">Save</string>
 </resources>
