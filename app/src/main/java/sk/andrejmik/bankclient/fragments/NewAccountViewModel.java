@@ -4,6 +4,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Date;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 import sk.andrejmik.bankclient.repository_interface.RepositoryFactory;
@@ -12,9 +18,9 @@ import sk.andrejmik.bankclient.utils.NetworkHelper;
 
 public class NewAccountViewModel extends ViewModel
 {
+    public LiveData<Account> account;
     MutableLiveData<Event<Event.LoadEvent>> onEvent = new MutableLiveData<>();
     private MutableLiveData<Account> mAccountLiveData;
-    public LiveData<Account> account;
     private IAccountRepository mAccountRepository;
     
     public NewAccountViewModel()
@@ -25,7 +31,7 @@ public class NewAccountViewModel extends ViewModel
         account = mAccountLiveData;
     }
     
-    public MutableLiveData<Account> getAccountLiveData()
+    MutableLiveData<Account> getAccountLiveData()
     {
         return mAccountLiveData;
     }
@@ -35,14 +41,42 @@ public class NewAccountViewModel extends ViewModel
         mAccountLiveData.setValue(account);
     }
     
-    public void saveAccount()
+    void saveAccount()
     {
         onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
+        Account account = mAccountLiveData.getValue();
+        account.setDateCreated(new Date());
         if (!NetworkHelper.isNetworkAvailable())
         {
             onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
             return;
         }
-        mAccountRepository.save(mAccountLiveData.getValue());
+        mAccountRepository.save(account).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Observer<Account>()
+                {
+                    @Override
+                    public void onSubscribe(Disposable d)
+                    {
+                    
+                    }
+                    
+                    @Override
+                    public void onNext(Account account)
+                    {
+                        mAccountLiveData.postValue(account);
+                    }
+                    
+                    @Override
+                    public void onError(Throwable e)
+                    {
+                        onEvent.postValue(new Event<>(Event.LoadEvent.UNKNOWN_ERROR));
+                    }
+                    
+                    @Override
+                    public void onComplete()
+                    {
+                        onEvent.postValue(new Event<>(Event.LoadEvent.COMPLETE));
+                    }
+                });
     }
 }

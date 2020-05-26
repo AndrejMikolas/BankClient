@@ -2,6 +2,8 @@ package sk.andrejmik.bankclient.objects;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,10 +18,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Card extends BaseEntity
 {
+    @SerializedName("cardNo")
     private String cardNo;
     
+    @SerializedName("expirationYear")
     private int expirationYear;
     
+    @SerializedName("expirationMonth")
     private int expirationMonth;
     
     public String getCardNoFormatted()

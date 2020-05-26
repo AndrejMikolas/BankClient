@@ -2,6 +2,9 @@ package sk.andrejmik.bankclient.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -37,6 +40,12 @@ public class NewAccountFragment extends Fragment
         }
     };
     
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
     
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -55,6 +64,25 @@ public class NewAccountFragment extends Fragment
         // TODO: Use the ViewModel
         
         mViewModel.getAccountLiveData().observe(getViewLifecycleOwner(), mAccountObserver);
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_new_account, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_save_account:
+                mViewModel.saveAccount();
+                break;
+        }
+        return true;
     }
     
 }

@@ -16,4 +16,5 @@
     <string name="expiration_month">Expiration month</string>
     <string name="expiration_year">Expiration year</string>
     <string name="add_card">Add card</string>
+    <string name="save">Save</string>
 </resources>

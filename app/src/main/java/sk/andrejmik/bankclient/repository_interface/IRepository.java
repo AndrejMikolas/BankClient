@@ -11,7 +11,7 @@ public interface IRepository<T extends BaseEntity>
     
     Observable<List<T>> getAll();
     
-    void save(T data);
+    Observable<T> save(T data);
     
     void delete(Object id);
 }
