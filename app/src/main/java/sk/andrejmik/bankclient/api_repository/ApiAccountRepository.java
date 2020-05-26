@@ -27,7 +27,7 @@ import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 
 public class ApiAccountRepository implements IAccountRepository
 {
-    private static final String API_URL = "http://192.168.0.15:8080";
+    private static final String API_URL = "http://192.168.8.101:8080";
     
     @Override
     public Observable<Account> get(Object id)

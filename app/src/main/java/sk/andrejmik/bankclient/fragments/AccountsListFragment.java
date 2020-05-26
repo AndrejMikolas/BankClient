@@ -57,10 +57,10 @@ public class AccountsListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(AccountsListViewModel.class);
         mViewModel.getAccountsLiveData().observe(getViewLifecycleOwner(), mAccountListUpdateObserver);
-        registerListItemClickListener();
+        setListeners();
     }
     
-    private void registerListItemClickListener()
+    private void setListeners()
     {
         mBinding.recyclerviewAccounts.addOnItemTouchListener(
                 new RecyclerTouchListener(getContext(), mBinding.recyclerviewAccounts, new RecyclerTouchListener.ClickListener()
@@ -74,6 +74,14 @@ public class AccountsListFragment extends Fragment
                         NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountsListFragment_to_accountDetailFragment, bundle);
                     }
                 }));
+        mBinding.floatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountsListFragment_to_newAccountFragment);
+            }
+        });
     }
     
     

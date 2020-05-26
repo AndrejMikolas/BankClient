@@ -36,11 +36,6 @@ public class AccountDetailFragment extends Fragment
         }
     };
     
-    public static AccountDetailFragment newInstance()
-    {
-        return new AccountDetailFragment();
-    }
-    
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {

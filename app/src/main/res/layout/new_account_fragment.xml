@@ -4,13 +4,11 @@
 
     <data>
 
-        <variable
-            name="account"
-            type="android.accounts.Account" />
+        <import type="androidx.lifecycle.LiveData" />
 
         <variable
-            name="owner"
-            type="sk.andrejmik.bankclient.objects.Person" />
+            name="account"
+            type="LiveData&lt;sk.andrejmik.bankclient.objects.Account>" />
     </data>
 
     <LinearLayout
@@ -43,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
-                android:text="@={owner.name}" />
+                android:text="@={account.owner.name}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout style="@style/textInputLayout">
@@ -52,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/surname"
-                android:text="@={owner.surname}" />
+                android:text="@={account.owner.surname}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout style="@style/textInputLayout">
@@ -61,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/born"
-                android:text="@={owner.born.toString()}"/>
+                android:text="@{account.owner.born.toString()}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
