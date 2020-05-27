@@ -40,7 +40,6 @@
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:text="@{@string/user_name(account.owner.name, account.owner.surname)}"
-                android:textColor="@color/colorAccent"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/row_item_account_list_cards_count"
@@ -56,7 +55,6 @@
                 android:drawableEnd="@drawable/ic_credit_card_black_24dp"
                 android:gravity="center_vertical|end"
                 android:text="@{&quot;&quot;+ account.cardsList.size()}"
-                android:textColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="3" />

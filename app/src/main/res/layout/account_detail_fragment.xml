@@ -10,110 +10,116 @@
             type="sk.andrejmik.bankclient.objects.Account" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container_account_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".fragments.AccountDetailFragment">
+        android:layout_height="match_parent">
 
-        <TableLayout
-            android:id="@+id/table_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".fragments.AccountDetailFragment">
 
-            <TableRow
-                android:layout_width="match_parent"
+            <TableLayout
+                android:id="@+id/table_layout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp">
+                android:background="@color/colorPrimary"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    style="@style/account_detail_key"
-                    android:drawableStart="@drawable/ic_account_balance_wallet_black_24dp"
-                    android:text="@string/account_name" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
 
-                <TextView
-                    android:id="@+id/account_name"
-                    style="@style/account_detail_value"
-                    android:text="@{account.name}"
-                    tools:text="Test account" />
-            </TableRow>
+                    <TextView
+                        style="@style/account_detail_key"
+                        android:drawableStart="@drawable/ic_account_balance_wallet_black_24dp"
+                        android:text="@string/account_name" />
 
-            <TableRow
-                android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/account_name"
+                        style="@style/account_detail_value"
+                        android:text="@{account.name}"
+                        tools:text="Test account" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        style="@style/account_detail_key"
+                        android:drawableStart="@drawable/ic_date_range_black_24dp"
+                        android:text="@string/created_on" />
+
+                    <TextView
+                        android:id="@+id/account_created"
+                        style="@style/account_detail_value"
+                        android:text="@{account.dateCreated.toString()}"
+                        tools:text="01.01.1990" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        style="@style/account_detail_key"
+                        android:drawableStart="@drawable/ic_account_circle_black_24dp"
+                        android:text="@string/owner" />
+
+                    <TextView
+                        android:id="@+id/account_owner"
+                        style="@style/account_detail_value"
+                        android:text="@{@string/user_name(account.owner.name, account.owner.surname)}"
+                        tools:text="Test User" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
+
+                    <TextView
+                        style="@style/account_detail_key"
+                        android:drawableStart="@drawable/ic_date_range_black_24dp"
+                        android:text="@string/born" />
+
+                    <TextView
+                        android:id="@+id/owner_born"
+                        style="@style/account_detail_value"
+                        android:text="@{account.owner.born.toString()}"
+                        tools:text="01.01.1990" />
+                </TableRow>
+
+            </TableLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_cards"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/table_layout" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton_add_card"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp">
+                android:layout_margin="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_add_white_24dp" />
 
-                <TextView
-                    style="@style/account_detail_key"
-                    android:drawableStart="@drawable/ic_date_range_black_24dp"
-                    android:text="@string/created_on" />
-
-                <TextView
-                    android:id="@+id/account_created"
-                    style="@style/account_detail_value"
-                    android:text="@{account.dateCreated.toString()}"
-                    tools:text="01.01.1990" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp">
-
-                <TextView
-                    style="@style/account_detail_key"
-                    android:drawableStart="@drawable/ic_account_circle_black_24dp"
-                    android:text="@string/owner" />
-
-                <TextView
-                    android:id="@+id/account_owner"
-                    style="@style/account_detail_value"
-                    android:text="@{@string/user_name(account.owner.name, account.owner.surname)}"
-                    tools:text="Test User" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp">
-
-                <TextView
-                    style="@style/account_detail_key"
-                    android:drawableStart="@drawable/ic_date_range_black_24dp"
-                    android:text="@string/born" />
-
-                <TextView
-                    android:id="@+id/owner_born"
-                    style="@style/account_detail_value"
-                    android:text="@{account.owner.born.toString()}"
-                    tools:text="01.01.1990" />
-            </TableRow>
-
-        </TableLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_cards"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/table_layout" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton_add_card"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_add_white_24dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

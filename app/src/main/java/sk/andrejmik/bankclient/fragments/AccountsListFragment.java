@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -20,6 +24,8 @@ import sk.andrejmik.bankclient.R;
 import sk.andrejmik.bankclient.databinding.AccountsListFragmentBinding;
 import sk.andrejmik.bankclient.list_adapters.AccountsAdapter;
 import sk.andrejmik.bankclient.objects.Account;
+import sk.andrejmik.bankclient.utils.Event;
+import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.RecyclerTouchListener;
 
 public class AccountsListFragment extends Fragment
@@ -38,10 +44,67 @@ public class AccountsListFragment extends Fragment
             mBinding.recyclerviewAccounts.setAdapter(mAccountsAdapter);
         }
     };
+    private Snackbar mSnackUnknownError;
+    private Snackbar mSnackNetworkError;
+    private Observer<Event<LoadEvent>> mEventObserver = new Observer<Event<LoadEvent>>()
+    {
+        @Override
+        public void onChanged(Event<LoadEvent> loadEventEvent)
+        {
+            switch (loadEventEvent.peekContent())
+            {
+                case UNKNOWN_ERROR:
+                    controlSnack(mSnackUnknownError, true);
+                    controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainer.setEnabled(true);
+                    mBinding.swipeContainer.setRefreshing(false);
+                    break;
+                case NETWORK_ERROR:
+                    controlSnack(mSnackUnknownError, false);
+                    controlSnack(mSnackNetworkError, true);
+                    mBinding.swipeContainer.setEnabled(true);
+                    mBinding.swipeContainer.setRefreshing(false);
+                    break;
+                case COMPLETE:
+                    controlSnack(mSnackUnknownError, false);
+                    controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainer.setEnabled(true);
+                    mBinding.swipeContainer.setRefreshing(false);
+                    Toast.makeText(getContext(), getResources().getString(R.string.updated), Toast.LENGTH_SHORT).show();
+                    break;
+                case STARTED:
+                    controlSnack(mSnackUnknownError, false);
+                    controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainer.setRefreshing(true);
+                    break;
+                case NO_MORE:
+                    break;
+                case NOT_FOUND:
+                    controlSnack(mSnackUnknownError, false);
+                    controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainer.setEnabled(true);
+                    mBinding.swipeContainer.setRefreshing(false);
+                    break;
+            }
+        }
+    };
+    private View.OnClickListener clickRetryLoadListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            loadAccounts();
+        }
+    };
     
     public AccountsListFragment()
     {
         mFragment = this;
+    }
+    
+    private void loadAccounts()
+    {
+        mViewModel.loadAccounts();
     }
     
     @Override
@@ -56,11 +119,32 @@ public class AccountsListFragment extends Fragment
     {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(AccountsListViewModel.class);
-        mViewModel.getAccountsLiveData().observe(getViewLifecycleOwner(), mAccountListUpdateObserver);
-        setListeners();
+        setupSnacks();
+        setupObservers();
+        setupListeners();
     }
     
-    private void setListeners()
+    /**
+     * Setting observers
+     */
+    private void setupObservers()
+    {
+        mViewModel.getAccountsLiveData().observe(getViewLifecycleOwner(), mAccountListUpdateObserver);
+        mViewModel.onEvent.observe(getViewLifecycleOwner(), mEventObserver);
+    }
+    
+    /**
+     * Creates and sets params of snackbars which will be used repeatedly
+     */
+    private void setupSnacks()
+    {
+        mSnackNetworkError = Snackbar.make(mBinding.swipeContainer, getResources().getString(R.string.network_error), Snackbar.LENGTH_INDEFINITE);
+        mSnackNetworkError.setAction(getResources().getString(R.string.retry), clickRetryLoadListener);
+        mSnackUnknownError = Snackbar.make(mBinding.swipeContainer, getResources().getString(R.string.unknown_error), Snackbar.LENGTH_INDEFINITE);
+        mSnackUnknownError.setAction(getResources().getString(R.string.retry), clickRetryLoadListener);
+    }
+    
+    private void setupListeners()
     {
         mBinding.recyclerviewAccounts.addOnItemTouchListener(
                 new RecyclerTouchListener(getContext(), mBinding.recyclerviewAccounts, new RecyclerTouchListener.ClickListener()
@@ -82,6 +166,32 @@ public class AccountsListFragment extends Fragment
                 NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountsListFragment_to_newAccountFragment);
             }
         });
+        mBinding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                loadAccounts();
+            }
+        });
+    }
+    
+    /**
+     * Show or dismiss snackbar provided in param
+     *
+     * @param snackbar: Snackbar instance to be controlled
+     * @param visible:  if snackbar will be shown or dismissed
+     */
+    private void controlSnack(Snackbar snackbar, Boolean visible)
+    {
+        if (visible)
+        {
+            snackbar.show();
+        }
+        else
+        {
+            snackbar.dismiss();
+        }
     }
     
     

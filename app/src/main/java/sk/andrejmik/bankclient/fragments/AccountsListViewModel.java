@@ -13,11 +13,12 @@ import sk.andrejmik.bankclient.api_repository.ApiAccountRepository;
 import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 import sk.andrejmik.bankclient.utils.Event;
+import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.NetworkHelper;
 
 public class AccountsListViewModel extends ViewModel
 {
-    MutableLiveData<Event<Event.LoadEvent>> onEvent = new MutableLiveData<>();
+    MutableLiveData<Event<LoadEvent>> onEvent = new MutableLiveData<>();
     
     private IAccountRepository mAccountRepository;
     private MutableLiveData<List<Account>> mListLiveData;
@@ -34,12 +35,12 @@ public class AccountsListViewModel extends ViewModel
         return mListLiveData;
     }
     
-    private void loadAccounts()
+    public void loadAccounts()
     {
-        onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
+        onEvent.postValue(new Event<>(LoadEvent.STARTED));
         if (!NetworkHelper.isNetworkAvailable())
         {
-            onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
+            onEvent.postValue(new Event<>(LoadEvent.NETWORK_ERROR));
             return;
         }
         mAccountRepository.getAll().subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Account>>()
@@ -59,13 +60,13 @@ public class AccountsListViewModel extends ViewModel
             @Override
             public void onError(Throwable e)
             {
-                onEvent.postValue(new Event<>(Event.LoadEvent.UNKNOWN_ERROR));
+                onEvent.postValue(new Event<>(LoadEvent.UNKNOWN_ERROR));
             }
             
             @Override
             public void onComplete()
             {
-                onEvent.postValue(new Event<>(Event.LoadEvent.COMPLETE));
+                onEvent.postValue(new Event<>(LoadEvent.COMPLETE));
             }
         });
     }
