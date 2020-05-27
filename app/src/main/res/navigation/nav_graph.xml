@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_accountDetailFragment_to_newAccountFragment"
             app:destination="@id/newAccountFragment" />
+        <action
+            android:id="@+id/action_accountDetailFragment_to_accountsListFragment"
+            app:destination="@id/accountsListFragment" />
     </fragment>
     <fragment
         android:id="@+id/newAccountFragment"

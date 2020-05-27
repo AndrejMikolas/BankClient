@@ -13,5 +13,5 @@ public interface IRepository<T extends BaseEntity>
     
     Observable<T> save(T data);
     
-    void delete(Object id);
+    Observable<Void> delete(Object id);
 }

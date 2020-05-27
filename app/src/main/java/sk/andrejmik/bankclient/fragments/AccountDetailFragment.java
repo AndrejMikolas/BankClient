@@ -1,5 +1,6 @@
 package sk.andrejmik.bankclient.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,6 +38,7 @@ public class AccountDetailFragment extends Fragment
     private String mAccountId;
     private CardsListAdapter mCardsListAdapter;
     private Snackbar mSnackUnknownError, mSnackNetworkError;
+    private ProgressDialog mProgressDialog;
     private Observer<Account> mAccountObserver = new Observer<Account>()
     {
         @Override
@@ -48,7 +50,7 @@ public class AccountDetailFragment extends Fragment
             mBinding.recyclerviewCards.setAdapter(mCardsListAdapter);
         }
     };
-    private Observer<Event<LoadEvent>> mEventObserver = new Observer<Event<LoadEvent>>()
+    private Observer<Event<LoadEvent>> mLoadAccountEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
         public void onChanged(Event<LoadEvent> loadEventEvent)
@@ -86,6 +88,32 @@ public class AccountDetailFragment extends Fragment
                     ViewHelper.controlSnack(mSnackNetworkError, false);
                     mBinding.swipeContainerAccountDetail.setEnabled(true);
                     mBinding.swipeContainerAccountDetail.setRefreshing(false);
+                    break;
+            }
+        }
+    };
+    private Observer<Event<LoadEvent>> mDeleteAccountEventObserver = new Observer<Event<LoadEvent>>()
+    {
+        @Override
+        public void onChanged(Event<LoadEvent> loadEventEvent)
+        {
+            switch (loadEventEvent.peekContent())
+            {
+                case UNKNOWN_ERROR:
+                    mProgressDialog.dismiss();
+                    mSnackUnknownError.show();
+                    break;
+                case NETWORK_ERROR:
+                    mProgressDialog.dismiss();
+                    mSnackNetworkError.show();
+                    break;
+                case COMPLETE:
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getContext(), getResources().getString(R.string.saved), Toast.LENGTH_SHORT).show();
+                    NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountDetailFragment_to_accountsListFragment);
+                    break;
+                case STARTED:
+                    mProgressDialog = ProgressDialog.show(getContext(), "", getString(R.string.deleting_account_dialog_message), true);
                     break;
             }
         }
@@ -152,6 +180,9 @@ public class AccountDetailFragment extends Fragment
                 bundle.putSerializable("account", mViewModel.getAccountLiveData().getValue());
                 NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountDetailFragment_to_newAccountFragment, bundle);
                 break;
+            case R.id.action_delete_account:
+                mViewModel.deleteAccount();
+                break;
         }
         return true;
     }
@@ -174,7 +205,8 @@ public class AccountDetailFragment extends Fragment
     private void setupObservers()
     {
         mViewModel.getAccountLiveData().observe(getViewLifecycleOwner(), mAccountObserver);
-        mViewModel.onEvent.observe(getViewLifecycleOwner(), mEventObserver);
+        mViewModel.loadAccountEvent.observe(getViewLifecycleOwner(), mLoadAccountEventObserver);
+        mViewModel.deleteAccountEvent.observe(getViewLifecycleOwner(), mDeleteAccountEventObserver);
     }
     
     /**
