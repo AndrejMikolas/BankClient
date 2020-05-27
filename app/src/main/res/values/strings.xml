@@ -17,4 +17,10 @@
     <string name="expiration_year">Expiration year</string>
     <string name="add_card">Add card</string>
     <string name="save">Save</string>
+    <string name="updated">Updated</string>
+    <string name="network_error">Network error</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="retry">Retry</string>
+    <string name="saving_dialog_message">Saving. Please wait...</string>
+    <string name="saved">Saved</string>
 </resources>

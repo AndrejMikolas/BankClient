@@ -14,12 +14,13 @@ import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 import sk.andrejmik.bankclient.repository_interface.RepositoryFactory;
 import sk.andrejmik.bankclient.utils.Event;
+import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.NetworkHelper;
 
 public class NewAccountViewModel extends ViewModel
 {
     public LiveData<Account> account;
-    MutableLiveData<Event<Event.LoadEvent>> onEvent = new MutableLiveData<>();
+    MutableLiveData<Event<LoadEvent>> onEvent = new MutableLiveData<>();
     private MutableLiveData<Account> mAccountLiveData;
     private IAccountRepository mAccountRepository;
     
@@ -43,40 +44,39 @@ public class NewAccountViewModel extends ViewModel
     
     void saveAccount()
     {
-        onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
+        onEvent.postValue(new Event<>(LoadEvent.STARTED));
         Account account = mAccountLiveData.getValue();
         account.setDateCreated(new Date());
         if (!NetworkHelper.isNetworkAvailable())
         {
-            onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
+            onEvent.postValue(new Event<>(LoadEvent.STARTED));
             return;
         }
-        mAccountRepository.save(account).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Observer<Account>()
-                {
-                    @Override
-                    public void onSubscribe(Disposable d)
-                    {
-                    
-                    }
-                    
-                    @Override
-                    public void onNext(Account account)
-                    {
-                        mAccountLiveData.postValue(account);
-                    }
-                    
-                    @Override
-                    public void onError(Throwable e)
-                    {
-                        onEvent.postValue(new Event<>(Event.LoadEvent.UNKNOWN_ERROR));
-                    }
-                    
-                    @Override
-                    public void onComplete()
-                    {
-                        onEvent.postValue(new Event<>(Event.LoadEvent.COMPLETE));
-                    }
-                });
+        mAccountRepository.save(account).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Account>()
+        {
+            @Override
+            public void onSubscribe(Disposable d)
+            {
+            
+            }
+            
+            @Override
+            public void onNext(Account account)
+            {
+                mAccountLiveData.postValue(account);
+            }
+            
+            @Override
+            public void onError(Throwable e)
+            {
+                onEvent.postValue(new Event<>(LoadEvent.UNKNOWN_ERROR));
+            }
+            
+            @Override
+            public void onComplete()
+            {
+                onEvent.postValue(new Event<>(LoadEvent.COMPLETE));
+            }
+        });
     }
 }

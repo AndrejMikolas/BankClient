@@ -13,11 +13,12 @@ import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 import sk.andrejmik.bankclient.repository_interface.RepositoryFactory;
 import sk.andrejmik.bankclient.utils.Event;
+import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.NetworkHelper;
 
 public class AccountDetailViewModel extends ViewModel
 {
-    MutableLiveData<Event<Event.LoadEvent>> onEvent = new MutableLiveData<>();
+    MutableLiveData<Event<LoadEvent>> onEvent = new MutableLiveData<>();
     private IAccountRepository mAccountRepository;
     private MutableLiveData<Account> mAccountLiveData;
     private String mParam;
@@ -27,7 +28,7 @@ public class AccountDetailViewModel extends ViewModel
         mParam = param;
         mAccountRepository = RepositoryFactory.getAccountRepository();
         mAccountLiveData = new MutableLiveData<>();
-        loadAccount(mParam);
+        loadAccount();
     }
     
     public MutableLiveData<Account> getAccountLiveData()
@@ -35,12 +36,17 @@ public class AccountDetailViewModel extends ViewModel
         return mAccountLiveData;
     }
     
+    public void loadAccount()
+    {
+        loadAccount(mParam);
+    }
+    
     private void loadAccount(String accountId)
     {
-        onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
+        onEvent.postValue(new Event<>(LoadEvent.STARTED));
         if (!NetworkHelper.isNetworkAvailable())
         {
-            onEvent.postValue(new Event<>(Event.LoadEvent.STARTED));
+            onEvent.postValue(new Event<>(LoadEvent.NETWORK_ERROR));
             return;
         }
         mAccountRepository.get(accountId).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Account>()
@@ -48,7 +54,6 @@ public class AccountDetailViewModel extends ViewModel
             @Override
             public void onSubscribe(Disposable d)
             {
-            
             }
             
             @Override
@@ -60,13 +65,13 @@ public class AccountDetailViewModel extends ViewModel
             @Override
             public void onError(Throwable e)
             {
-                onEvent.postValue(new Event<>(Event.LoadEvent.UNKNOWN_ERROR));
+                onEvent.postValue(new Event<>(LoadEvent.UNKNOWN_ERROR));
             }
             
             @Override
             public void onComplete()
             {
-                onEvent.postValue(new Event<>(Event.LoadEvent.COMPLETE));
+                onEvent.postValue(new Event<>(LoadEvent.COMPLETE));
             }
         });
     }
