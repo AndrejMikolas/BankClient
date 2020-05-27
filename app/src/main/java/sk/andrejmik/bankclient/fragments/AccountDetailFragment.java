@@ -2,6 +2,9 @@ package sk.andrejmik.bankclient.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -12,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -27,6 +31,7 @@ import sk.andrejmik.bankclient.utils.ViewHelper;
 
 public class AccountDetailFragment extends Fragment
 {
+    private Fragment mFragment;
     private AccountDetailViewModel mViewModel;
     private AccountDetailFragmentBinding mBinding;
     private String mAccountId;
@@ -94,6 +99,18 @@ public class AccountDetailFragment extends Fragment
         }
     };
     
+    public AccountDetailFragment()
+    {
+        mFragment = this;
+    }
+    
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+    
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
@@ -116,6 +133,27 @@ public class AccountDetailFragment extends Fragment
         setupObservers();
         setupSnacks();
         setupListeners();
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_detail_account, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_edit_account:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("account", mViewModel.getAccountLiveData().getValue());
+                NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountDetailFragment_to_newAccountFragment, bundle);
+                break;
+        }
+        return true;
     }
     
     private void setupListeners()

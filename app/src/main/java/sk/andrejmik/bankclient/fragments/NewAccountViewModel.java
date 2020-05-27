@@ -1,8 +1,10 @@
 package sk.andrejmik.bankclient.fragments;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Date;
 
@@ -23,6 +25,16 @@ public class NewAccountViewModel extends ViewModel
     MutableLiveData<Event<LoadEvent>> onEvent = new MutableLiveData<>();
     private MutableLiveData<Account> mAccountLiveData;
     private IAccountRepository mAccountRepository;
+    //private String mEditAccountId;
+    
+//    public NewAccountViewModel(String editAccountId)
+//    {
+//        mEditAccountId = editAccountId;
+//        mAccountRepository = RepositoryFactory.getAccountRepository();
+//        mAccountLiveData = new MutableLiveData<>();
+//        mAccountLiveData.postValue(new Account());
+//        account = mAccountLiveData;
+//    }
     
     public NewAccountViewModel()
     {
@@ -39,7 +51,7 @@ public class NewAccountViewModel extends ViewModel
     
     public void setAccountLiveData(Account account)
     {
-        mAccountLiveData.setValue(account);
+        mAccountLiveData.postValue(account);
     }
     
     void saveAccount()
@@ -79,4 +91,21 @@ public class NewAccountViewModel extends ViewModel
             }
         });
     }
+    
+//    public static class NewAccountViewModelFactory implements ViewModelProvider.Factory
+//    {
+//        private String mParam;
+//
+//        public NewAccountViewModelFactory(String param)
+//        {
+//            mParam = param;
+//        }
+//
+//        @NonNull
+//        @Override
+//        public <T extends ViewModel> T create(@NonNull Class<T> modelClass)
+//        {
+//            return (T) new NewAccountViewModel(mParam);
+//        }
+//    }
 }

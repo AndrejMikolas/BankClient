@@ -100,6 +100,12 @@ public class NewAccountFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(NewAccountViewModel.class);
         mBinding.setAccount(mViewModel.account);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("account"))
+        {
+            Account editAccount = (Account) bundle.getSerializable("account");
+            mViewModel.setAccountLiveData(editAccount);
+        }
         setupObservers();
         setupSnacks();
     }
