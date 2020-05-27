@@ -17,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,6 +30,7 @@ import sk.andrejmik.bankclient.utils.LoadEvent;
 
 public class NewAccountFragment extends Fragment
 {
+    private Fragment mFragment;
     private NewAccountFragmentBinding mBinding;
     private NewAccountViewModel mViewModel;
     private ArrayAdapter<Card> mCardArrayAdapter;
@@ -45,7 +47,7 @@ public class NewAccountFragment extends Fragment
     };
     private ProgressDialog mProgressDialog;
     private Snackbar mSnackNetworkError, mSnackUnknownError;
-    private Observer<Event<LoadEvent>> mEventObserver = new Observer<Event<LoadEvent>>()
+    private Observer<Event<LoadEvent>> mSaveAccountEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
         public void onChanged(Event<LoadEvent> loadEventEvent)
@@ -63,6 +65,7 @@ public class NewAccountFragment extends Fragment
                 case COMPLETE:
                     mProgressDialog.dismiss();
                     Toast.makeText(getContext(), getResources().getString(R.string.saved), Toast.LENGTH_SHORT).show();
+                    NavHostFragment.findNavController(mFragment).navigate(R.id.action_newAccountFragment_to_accountsListFragment);
                     break;
                 case STARTED:
                     mProgressDialog = ProgressDialog.show(getContext(), "", getString(R.string.saving_dialog_message), true);
@@ -70,6 +73,11 @@ public class NewAccountFragment extends Fragment
             }
         }
     };
+    
+    public NewAccountFragment()
+    {
+        mFragment = this;
+    }
     
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -127,7 +135,7 @@ public class NewAccountFragment extends Fragment
     private void setupObservers()
     {
         mViewModel.getAccountLiveData().observe(getViewLifecycleOwner(), mAccountObserver);
-        mViewModel.onEvent.observe(getViewLifecycleOwner(), mEventObserver);
+        mViewModel.onEvent.observe(getViewLifecycleOwner(), mSaveAccountEventObserver);
     }
     
 }

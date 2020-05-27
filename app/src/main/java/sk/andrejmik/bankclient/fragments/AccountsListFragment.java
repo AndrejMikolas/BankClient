@@ -46,7 +46,7 @@ public class AccountsListFragment extends Fragment
         }
     };
     private Snackbar mSnackUnknownError, mSnackNetworkError;
-    private Observer<Event<LoadEvent>> mEventObserver = new Observer<Event<LoadEvent>>()
+    private Observer<Event<LoadEvent>> mLoadAccountsEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
         public void onChanged(Event<LoadEvent> loadEventEvent)
@@ -56,34 +56,34 @@ public class AccountsListFragment extends Fragment
                 case UNKNOWN_ERROR:
                     ViewHelper.controlSnack(mSnackUnknownError, true);
                     ViewHelper.controlSnack(mSnackNetworkError, false);
-                    mBinding.swipeContainer.setEnabled(true);
-                    mBinding.swipeContainer.setRefreshing(false);
+                    mBinding.swipeContainerAccountsList.setEnabled(true);
+                    mBinding.swipeContainerAccountsList.setRefreshing(false);
                     break;
                 case NETWORK_ERROR:
                     ViewHelper.controlSnack(mSnackUnknownError, false);
                     ViewHelper.controlSnack(mSnackNetworkError, true);
-                    mBinding.swipeContainer.setEnabled(true);
-                    mBinding.swipeContainer.setRefreshing(false);
+                    mBinding.swipeContainerAccountsList.setEnabled(true);
+                    mBinding.swipeContainerAccountsList.setRefreshing(false);
                     break;
                 case COMPLETE:
                     ViewHelper.controlSnack(mSnackUnknownError, false);
                     ViewHelper.controlSnack(mSnackNetworkError, false);
-                    mBinding.swipeContainer.setEnabled(true);
-                    mBinding.swipeContainer.setRefreshing(false);
+                    mBinding.swipeContainerAccountsList.setEnabled(true);
+                    mBinding.swipeContainerAccountsList.setRefreshing(false);
                     Toast.makeText(getContext(), getResources().getString(R.string.updated), Toast.LENGTH_SHORT).show();
                     break;
                 case STARTED:
                     ViewHelper.controlSnack(mSnackUnknownError, false);
                     ViewHelper.controlSnack(mSnackNetworkError, false);
-                    mBinding.swipeContainer.setRefreshing(true);
+                    mBinding.swipeContainerAccountsList.setRefreshing(true);
                     break;
                 case NO_MORE:
                     break;
                 case NOT_FOUND:
                     ViewHelper.controlSnack(mSnackUnknownError, false);
                     ViewHelper.controlSnack(mSnackNetworkError, false);
-                    mBinding.swipeContainer.setEnabled(true);
-                    mBinding.swipeContainer.setRefreshing(false);
+                    mBinding.swipeContainerAccountsList.setEnabled(true);
+                    mBinding.swipeContainerAccountsList.setRefreshing(false);
                     break;
             }
         }
@@ -130,7 +130,7 @@ public class AccountsListFragment extends Fragment
     private void setupObservers()
     {
         mViewModel.getAccountsLiveData().observe(getViewLifecycleOwner(), mAccountListUpdateObserver);
-        mViewModel.onEvent.observe(getViewLifecycleOwner(), mEventObserver);
+        mViewModel.onEvent.observe(getViewLifecycleOwner(), mLoadAccountsEventObserver);
     }
     
     /**
@@ -138,9 +138,11 @@ public class AccountsListFragment extends Fragment
      */
     private void setupSnacks()
     {
-        mSnackNetworkError = Snackbar.make(mBinding.swipeContainer, getResources().getString(R.string.network_error), Snackbar.LENGTH_INDEFINITE);
+        mSnackNetworkError = Snackbar.make(mBinding.swipeContainerAccountsList, getResources().getString(R.string.network_error),
+                                           Snackbar.LENGTH_INDEFINITE);
         mSnackNetworkError.setAction(getResources().getString(R.string.retry), clickRetryLoadListener);
-        mSnackUnknownError = Snackbar.make(mBinding.swipeContainer, getResources().getString(R.string.unknown_error), Snackbar.LENGTH_INDEFINITE);
+        mSnackUnknownError = Snackbar.make(mBinding.swipeContainerAccountsList, getResources().getString(R.string.unknown_error),
+                                           Snackbar.LENGTH_INDEFINITE);
         mSnackUnknownError.setAction(getResources().getString(R.string.retry), clickRetryLoadListener);
     }
     
@@ -166,7 +168,7 @@ public class AccountsListFragment extends Fragment
                 NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountsListFragment_to_newAccountFragment);
             }
         });
-        mBinding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        mBinding.swipeContainerAccountsList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
