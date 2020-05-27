@@ -28,7 +28,7 @@ public class AccountDetailViewModel extends ViewModel
         mParam = param;
         mAccountRepository = RepositoryFactory.getAccountRepository();
         mAccountLiveData = new MutableLiveData<>();
-        loadAccount(mParam);
+        loadAccount();
     }
     
     public MutableLiveData<Account> getAccountLiveData()
@@ -36,12 +36,17 @@ public class AccountDetailViewModel extends ViewModel
         return mAccountLiveData;
     }
     
+    public void loadAccount()
+    {
+        loadAccount(mParam);
+    }
+    
     private void loadAccount(String accountId)
     {
         onEvent.postValue(new Event<>(LoadEvent.STARTED));
         if (!NetworkHelper.isNetworkAvailable())
         {
-            onEvent.postValue(new Event<>(LoadEvent.STARTED));
+            onEvent.postValue(new Event<>(LoadEvent.NETWORK_ERROR));
             return;
         }
         mAccountRepository.get(accountId).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Account>()
@@ -49,7 +54,6 @@ public class AccountDetailViewModel extends ViewModel
             @Override
             public void onSubscribe(Disposable d)
             {
-            
             }
             
             @Override

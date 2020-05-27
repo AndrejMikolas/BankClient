@@ -21,4 +21,6 @@
     <string name="network_error">Network error</string>
     <string name="unknown_error">Unknown error</string>
     <string name="retry">Retry</string>
+    <string name="saving_dialog_message">Saving. Please wait...</string>
+    <string name="saved">Saved</string>
 </resources>

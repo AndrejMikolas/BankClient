@@ -27,6 +27,7 @@ import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.utils.Event;
 import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.RecyclerTouchListener;
+import sk.andrejmik.bankclient.utils.ViewHelper;
 
 public class AccountsListFragment extends Fragment
 {
@@ -44,8 +45,7 @@ public class AccountsListFragment extends Fragment
             mBinding.recyclerviewAccounts.setAdapter(mAccountsAdapter);
         }
     };
-    private Snackbar mSnackUnknownError;
-    private Snackbar mSnackNetworkError;
+    private Snackbar mSnackUnknownError, mSnackNetworkError;
     private Observer<Event<LoadEvent>> mEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
@@ -54,34 +54,34 @@ public class AccountsListFragment extends Fragment
             switch (loadEventEvent.peekContent())
             {
                 case UNKNOWN_ERROR:
-                    controlSnack(mSnackUnknownError, true);
-                    controlSnack(mSnackNetworkError, false);
+                    ViewHelper.controlSnack(mSnackUnknownError, true);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
                     mBinding.swipeContainer.setEnabled(true);
                     mBinding.swipeContainer.setRefreshing(false);
                     break;
                 case NETWORK_ERROR:
-                    controlSnack(mSnackUnknownError, false);
-                    controlSnack(mSnackNetworkError, true);
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, true);
                     mBinding.swipeContainer.setEnabled(true);
                     mBinding.swipeContainer.setRefreshing(false);
                     break;
                 case COMPLETE:
-                    controlSnack(mSnackUnknownError, false);
-                    controlSnack(mSnackNetworkError, false);
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
                     mBinding.swipeContainer.setEnabled(true);
                     mBinding.swipeContainer.setRefreshing(false);
                     Toast.makeText(getContext(), getResources().getString(R.string.updated), Toast.LENGTH_SHORT).show();
                     break;
                 case STARTED:
-                    controlSnack(mSnackUnknownError, false);
-                    controlSnack(mSnackNetworkError, false);
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
                     mBinding.swipeContainer.setRefreshing(true);
                     break;
                 case NO_MORE:
                     break;
                 case NOT_FOUND:
-                    controlSnack(mSnackUnknownError, false);
-                    controlSnack(mSnackNetworkError, false);
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
                     mBinding.swipeContainer.setEnabled(true);
                     mBinding.swipeContainer.setRefreshing(false);
                     break;
@@ -175,24 +175,4 @@ public class AccountsListFragment extends Fragment
             }
         });
     }
-    
-    /**
-     * Show or dismiss snackbar provided in param
-     *
-     * @param snackbar: Snackbar instance to be controlled
-     * @param visible:  if snackbar will be shown or dismissed
-     */
-    private void controlSnack(Snackbar snackbar, Boolean visible)
-    {
-        if (visible)
-        {
-            snackbar.show();
-        }
-        else
-        {
-            snackbar.dismiss();
-        }
-    }
-    
-    
 }

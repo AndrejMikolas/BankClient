@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,11 +13,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import sk.andrejmik.bankclient.R;
 import sk.andrejmik.bankclient.databinding.AccountDetailFragmentBinding;
 import sk.andrejmik.bankclient.list_adapters.CardsListAdapter;
 import sk.andrejmik.bankclient.objects.Account;
+import sk.andrejmik.bankclient.utils.Event;
+import sk.andrejmik.bankclient.utils.LoadEvent;
+import sk.andrejmik.bankclient.utils.ViewHelper;
 
 public class AccountDetailFragment extends Fragment
 {
@@ -24,6 +31,7 @@ public class AccountDetailFragment extends Fragment
     private AccountDetailFragmentBinding mBinding;
     private String mAccountId;
     private CardsListAdapter mCardsListAdapter;
+    private Snackbar mSnackUnknownError, mSnackNetworkError;
     private Observer<Account> mAccountObserver = new Observer<Account>()
     {
         @Override
@@ -33,6 +41,56 @@ public class AccountDetailFragment extends Fragment
             mCardsListAdapter = new CardsListAdapter(account.getCardsList(), account.getOwner());
             mBinding.recyclerviewCards.setLayoutManager(new LinearLayoutManager(getContext()));
             mBinding.recyclerviewCards.setAdapter(mCardsListAdapter);
+        }
+    };
+    private Observer<Event<LoadEvent>> mEventObserver = new Observer<Event<LoadEvent>>()
+    {
+        @Override
+        public void onChanged(Event<LoadEvent> loadEventEvent)
+        {
+            switch (loadEventEvent.peekContent())
+            {
+                case UNKNOWN_ERROR:
+                    ViewHelper.controlSnack(mSnackUnknownError, true);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainerAccountDetail.setEnabled(true);
+                    mBinding.swipeContainerAccountDetail.setRefreshing(false);
+                    break;
+                case NETWORK_ERROR:
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, true);
+                    mBinding.swipeContainerAccountDetail.setEnabled(true);
+                    mBinding.swipeContainerAccountDetail.setRefreshing(false);
+                    break;
+                case COMPLETE:
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainerAccountDetail.setEnabled(true);
+                    mBinding.swipeContainerAccountDetail.setRefreshing(false);
+                    Toast.makeText(getContext(), getResources().getString(R.string.updated), Toast.LENGTH_SHORT).show();
+                    break;
+                case STARTED:
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainerAccountDetail.setRefreshing(true);
+                    break;
+                case NO_MORE:
+                    break;
+                case NOT_FOUND:
+                    ViewHelper.controlSnack(mSnackUnknownError, false);
+                    ViewHelper.controlSnack(mSnackNetworkError, false);
+                    mBinding.swipeContainerAccountDetail.setEnabled(true);
+                    mBinding.swipeContainerAccountDetail.setRefreshing(false);
+                    break;
+            }
+        }
+    };
+    private View.OnClickListener clickRetryLoadListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            loadAccount();
         }
     };
     
@@ -55,7 +113,48 @@ public class AccountDetailFragment extends Fragment
         mViewModel = ViewModelProviders.of(this, new AccountDetailViewModel.AccountDetailViewModelFactory(mAccountId)).get(
                 AccountDetailViewModel.class);
         mViewModel.getAccountLiveData().observe(getViewLifecycleOwner(), mAccountObserver);
-        // TODO: Use the ViewModel
+        setupObservers();
+        setupSnacks();
+        setupListeners();
+    }
+    
+    private void setupListeners()
+    {
+        mBinding.swipeContainerAccountDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                loadAccount();
+            }
+        });
+    }
+    
+    /**
+     * Setting observers
+     */
+    private void setupObservers()
+    {
+        mViewModel.getAccountLiveData().observe(getViewLifecycleOwner(), mAccountObserver);
+        mViewModel.onEvent.observe(getViewLifecycleOwner(), mEventObserver);
+    }
+    
+    /**
+     * Creates and sets params of snackbars which will be used repeatedly
+     */
+    private void setupSnacks()
+    {
+        mSnackNetworkError = Snackbar.make(mBinding.swipeContainerAccountDetail, getResources().getString(R.string.network_error),
+                                           Snackbar.LENGTH_INDEFINITE);
+        mSnackNetworkError.setAction(getResources().getString(R.string.retry), clickRetryLoadListener);
+        mSnackUnknownError = Snackbar.make(mBinding.swipeContainerAccountDetail, getResources().getString(R.string.unknown_error),
+                                           Snackbar.LENGTH_INDEFINITE);
+        mSnackUnknownError.setAction(getResources().getString(R.string.retry), clickRetryLoadListener);
+    }
+    
+    private void loadAccount()
+    {
+        mViewModel.loadAccount();
     }
     
 }
