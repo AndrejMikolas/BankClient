@@ -23,4 +23,5 @@
     <string name="retry">Retry</string>
     <string name="saving_dialog_message">Saving. Please wait...</string>
     <string name="saved">Saved</string>
+    <string name="deleting_account_dialog_message">Deleting account. Please wait...</string>
 </resources>

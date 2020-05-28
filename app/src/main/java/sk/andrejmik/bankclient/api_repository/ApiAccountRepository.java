@@ -1,7 +1,5 @@
 package sk.andrejmik.bankclient.api_repository;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +64,7 @@ public class ApiAccountRepository implements IAccountRepository
                         }
                         else
                         {
-                            emitter.onError(new IllegalStateException("${response.code}"));
+                            emitter.onError(new IllegalStateException(String.valueOf(response.code())));
                         }
                     }
                 });
@@ -109,7 +107,7 @@ public class ApiAccountRepository implements IAccountRepository
                         }
                         else
                         {
-                            emitter.onError(new IllegalStateException("${response.code}"));
+                            emitter.onError(new IllegalStateException(String.valueOf(response.code())));
                         }
                     }
                 });
@@ -150,7 +148,7 @@ public class ApiAccountRepository implements IAccountRepository
                         }
                         else
                         {
-                            emitter.onError(new IllegalStateException("${response.code}"));
+                            emitter.onError(new IllegalStateException(String.valueOf(response.code())));
                         }
                     }
                 });
@@ -159,8 +157,44 @@ public class ApiAccountRepository implements IAccountRepository
     }
     
     @Override
-    public void delete(Object id)
+    public Observable<Void> delete(Object id)
     {
-    
+        String requestUrl = API_URL + "/accounts/remove/" + id.toString();
+        final OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(null, new byte[0]);
+        final Request request = new Request.Builder().url(requestUrl).post(body).build();
+        return Observable.create(new ObservableOnSubscribe<Void>()
+        {
+            @Override
+            public void subscribe(final ObservableEmitter<Void> emitter)
+            {
+                client.newCall(request).enqueue(new Callback()
+                {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e)
+                    {
+                        emitter.onError(e);
+                    }
+                    
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
+                    {
+                        if (response.isSuccessful())
+                        {
+                            String jsonBody = Objects.requireNonNull(response.body()).string();
+                            Type listType = new TypeToken<ArrayList<Account>>()
+                            {
+                            }.getType();
+                            List<Account> result = Globals.GSON.fromJson(jsonBody, listType);
+                            emitter.onComplete();
+                        }
+                        else
+                        {
+                            emitter.onError(new IllegalStateException(String.valueOf(response.code())));
+                        }
+                    }
+                });
+            }
+        }).timeout(10, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
 }

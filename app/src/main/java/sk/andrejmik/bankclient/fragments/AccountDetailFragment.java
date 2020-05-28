@@ -1,7 +1,11 @@
 package sk.andrejmik.bankclient.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -12,6 +16,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -27,11 +32,13 @@ import sk.andrejmik.bankclient.utils.ViewHelper;
 
 public class AccountDetailFragment extends Fragment
 {
+    private Fragment mFragment;
     private AccountDetailViewModel mViewModel;
     private AccountDetailFragmentBinding mBinding;
     private String mAccountId;
     private CardsListAdapter mCardsListAdapter;
     private Snackbar mSnackUnknownError, mSnackNetworkError;
+    private ProgressDialog mProgressDialog;
     private Observer<Account> mAccountObserver = new Observer<Account>()
     {
         @Override
@@ -43,7 +50,7 @@ public class AccountDetailFragment extends Fragment
             mBinding.recyclerviewCards.setAdapter(mCardsListAdapter);
         }
     };
-    private Observer<Event<LoadEvent>> mEventObserver = new Observer<Event<LoadEvent>>()
+    private Observer<Event<LoadEvent>> mLoadAccountEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
         public void onChanged(Event<LoadEvent> loadEventEvent)
@@ -85,6 +92,32 @@ public class AccountDetailFragment extends Fragment
             }
         }
     };
+    private Observer<Event<LoadEvent>> mDeleteAccountEventObserver = new Observer<Event<LoadEvent>>()
+    {
+        @Override
+        public void onChanged(Event<LoadEvent> loadEventEvent)
+        {
+            switch (loadEventEvent.peekContent())
+            {
+                case UNKNOWN_ERROR:
+                    mProgressDialog.dismiss();
+                    mSnackUnknownError.show();
+                    break;
+                case NETWORK_ERROR:
+                    mProgressDialog.dismiss();
+                    mSnackNetworkError.show();
+                    break;
+                case COMPLETE:
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getContext(), getResources().getString(R.string.saved), Toast.LENGTH_SHORT).show();
+                    NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountDetailFragment_to_accountsListFragment);
+                    break;
+                case STARTED:
+                    mProgressDialog = ProgressDialog.show(getContext(), "", getString(R.string.deleting_account_dialog_message), true);
+                    break;
+            }
+        }
+    };
     private View.OnClickListener clickRetryLoadListener = new View.OnClickListener()
     {
         @Override
@@ -93,6 +126,18 @@ public class AccountDetailFragment extends Fragment
             loadAccount();
         }
     };
+    
+    public AccountDetailFragment()
+    {
+        mFragment = this;
+    }
+    
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
     
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -118,6 +163,30 @@ public class AccountDetailFragment extends Fragment
         setupListeners();
     }
     
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_detail_account, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_edit_account:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("account", mViewModel.getAccountLiveData().getValue());
+                NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountDetailFragment_to_newAccountFragment, bundle);
+                break;
+            case R.id.action_delete_account:
+                mViewModel.deleteAccount();
+                break;
+        }
+        return true;
+    }
+    
     private void setupListeners()
     {
         mBinding.swipeContainerAccountDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -136,7 +205,8 @@ public class AccountDetailFragment extends Fragment
     private void setupObservers()
     {
         mViewModel.getAccountLiveData().observe(getViewLifecycleOwner(), mAccountObserver);
-        mViewModel.onEvent.observe(getViewLifecycleOwner(), mEventObserver);
+        mViewModel.loadAccountEvent.observe(getViewLifecycleOwner(), mLoadAccountEventObserver);
+        mViewModel.deleteAccountEvent.observe(getViewLifecycleOwner(), mDeleteAccountEventObserver);
     }
     
     /**

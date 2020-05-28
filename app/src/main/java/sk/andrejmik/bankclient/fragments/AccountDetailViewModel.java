@@ -18,7 +18,8 @@ import sk.andrejmik.bankclient.utils.NetworkHelper;
 
 public class AccountDetailViewModel extends ViewModel
 {
-    MutableLiveData<Event<LoadEvent>> onEvent = new MutableLiveData<>();
+    MutableLiveData<Event<LoadEvent>> loadAccountEvent = new MutableLiveData<>();
+    MutableLiveData<Event<LoadEvent>> deleteAccountEvent = new MutableLiveData<>();
     private IAccountRepository mAccountRepository;
     private MutableLiveData<Account> mAccountLiveData;
     private String mParam;
@@ -43,10 +44,10 @@ public class AccountDetailViewModel extends ViewModel
     
     private void loadAccount(String accountId)
     {
-        onEvent.postValue(new Event<>(LoadEvent.STARTED));
+        loadAccountEvent.postValue(new Event<>(LoadEvent.STARTED));
         if (!NetworkHelper.isNetworkAvailable())
         {
-            onEvent.postValue(new Event<>(LoadEvent.NETWORK_ERROR));
+            loadAccountEvent.postValue(new Event<>(LoadEvent.NETWORK_ERROR));
             return;
         }
         mAccountRepository.get(accountId).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Account>()
@@ -65,13 +66,49 @@ public class AccountDetailViewModel extends ViewModel
             @Override
             public void onError(Throwable e)
             {
-                onEvent.postValue(new Event<>(LoadEvent.UNKNOWN_ERROR));
+                loadAccountEvent.postValue(new Event<>(LoadEvent.UNKNOWN_ERROR));
             }
             
             @Override
             public void onComplete()
             {
-                onEvent.postValue(new Event<>(LoadEvent.COMPLETE));
+                loadAccountEvent.postValue(new Event<>(LoadEvent.COMPLETE));
+            }
+        });
+    }
+    
+    public void deleteAccount()
+    {
+        deleteAccountEvent.postValue(new Event<>(LoadEvent.STARTED));
+        if (!NetworkHelper.isNetworkAvailable())
+        {
+            deleteAccountEvent.postValue(new Event<>(LoadEvent.NETWORK_ERROR));
+            return;
+        }
+        mAccountRepository.delete(mParam).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Void>()
+        {
+            @Override
+            public void onSubscribe(Disposable d)
+            {
+            
+            }
+            
+            @Override
+            public void onNext(Void aVoid)
+            {
+            
+            }
+            
+            @Override
+            public void onError(Throwable e)
+            {
+                deleteAccountEvent.postValue(new Event<>(LoadEvent.UNKNOWN_ERROR));
+            }
+            
+            @Override
+            public void onComplete()
+            {
+                deleteAccountEvent.postValue(new Event<>(LoadEvent.COMPLETE));
             }
         });
     }
