@@ -36,7 +36,6 @@ public class AccountDetailFragment extends Fragment
     private AccountDetailViewModel mViewModel;
     private AccountDetailFragmentBinding mBinding;
     private String mAccountId;
-    private CardsListAdapter mCardsListAdapter;
     private Snackbar mSnackUnknownError, mSnackNetworkError;
     private ProgressDialog mProgressDialog;
     private Observer<Account> mAccountObserver = new Observer<Account>()
@@ -45,9 +44,9 @@ public class AccountDetailFragment extends Fragment
         public void onChanged(Account account)
         {
             mBinding.setAccount(account);
-            mCardsListAdapter = new CardsListAdapter(account.getCardsList(), account.getOwner());
+            CardsListAdapter cardsListAdapter = new CardsListAdapter(account.getCardsList(), account.getOwner());
             mBinding.recyclerviewCards.setLayoutManager(new LinearLayoutManager(getContext()));
-            mBinding.recyclerviewCards.setAdapter(mCardsListAdapter);
+            mBinding.recyclerviewCards.setAdapter(cardsListAdapter);
         }
     };
     private Observer<Event<LoadEvent>> mLoadAccountEventObserver = new Observer<Event<LoadEvent>>()

@@ -1,6 +1,5 @@
 package sk.andrejmik.bankclient.objects;
 
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -27,5 +26,15 @@ public class Account extends BaseEntity
     
     @SerializedName("cardsList")
     private List<Card> cardsList = new ArrayList<>();
+    
+    public void addCard(Card card)
+    {
+        this.cardsList.add(card);
+    }
+    
+    public void removeCard(int position)
+    {
+        this.cardsList.remove(position);
+    }
     
 }

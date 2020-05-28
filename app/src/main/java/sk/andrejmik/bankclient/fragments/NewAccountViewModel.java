@@ -1,18 +1,18 @@
 package sk.andrejmik.bankclient.fragments;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Date;
+import java.util.Objects;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import sk.andrejmik.bankclient.objects.Account;
+import sk.andrejmik.bankclient.objects.Card;
 import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 import sk.andrejmik.bankclient.repository_interface.RepositoryFactory;
 import sk.andrejmik.bankclient.utils.Event;
@@ -25,16 +25,6 @@ public class NewAccountViewModel extends ViewModel
     MutableLiveData<Event<LoadEvent>> onEvent = new MutableLiveData<>();
     private MutableLiveData<Account> mAccountLiveData;
     private IAccountRepository mAccountRepository;
-    //private String mEditAccountId;
-    
-//    public NewAccountViewModel(String editAccountId)
-//    {
-//        mEditAccountId = editAccountId;
-//        mAccountRepository = RepositoryFactory.getAccountRepository();
-//        mAccountLiveData = new MutableLiveData<>();
-//        mAccountLiveData.postValue(new Account());
-//        account = mAccountLiveData;
-//    }
     
     public NewAccountViewModel()
     {
@@ -49,15 +39,27 @@ public class NewAccountViewModel extends ViewModel
         return mAccountLiveData;
     }
     
-    public void setAccountLiveData(Account account)
+    void setAccountLiveData(Account account)
     {
         mAccountLiveData.postValue(account);
+    }
+    
+    public void addCard(Card card)
+    {
+        Objects.requireNonNull(mAccountLiveData.getValue()).addCard(card);
+        /*To invoke notify Observers*/
+        mAccountLiveData.postValue(mAccountLiveData.getValue());
     }
     
     void saveAccount()
     {
         onEvent.postValue(new Event<>(LoadEvent.STARTED));
         Account account = mAccountLiveData.getValue();
+        if (account == null)
+        {
+            onEvent.postValue(new Event<>(LoadEvent.UNKNOWN_ERROR));
+            return;
+        }
         account.setDateCreated(new Date());
         if (!NetworkHelper.isNetworkAvailable())
         {
@@ -92,20 +94,4 @@ public class NewAccountViewModel extends ViewModel
         });
     }
     
-//    public static class NewAccountViewModelFactory implements ViewModelProvider.Factory
-//    {
-//        private String mParam;
-//
-//        public NewAccountViewModelFactory(String param)
-//        {
-//            mParam = param;
-//        }
-//
-//        @NonNull
-//        @Override
-//        public <T extends ViewModel> T create(@NonNull Class<T> modelClass)
-//        {
-//            return (T) new NewAccountViewModel(mParam);
-//        }
-//    }
 }
