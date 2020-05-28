@@ -28,7 +28,7 @@ import sk.andrejmik.bankclient.utils.Globals;
 
 public class ApiAccountRepository implements IAccountRepository
 {
-    private static final String API_URL = "http://192.168.1.20:8080";
+    private static final String API_URL = "http://192.168.1.17:8080";
 //private static final String API_URL = "http://192.168.0.13:8080";
 //private static final String API_URL = "http://192.168.8.101:8080";
     

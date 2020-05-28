@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,22 @@ public class Card extends BaseEntity
 {
     @SerializedName("cardNo")
     private String cardNo;
-    
     @SerializedName("expirationYear")
-    private int expirationYear;
-    
+    private Integer expirationYear;
     @SerializedName("expirationMonth")
-    private int expirationMonth;
+    private Integer expirationMonth;
+    
+    public static String generateCardNo()
+    {
+        int randomNum;
+        StringBuilder numberString = new StringBuilder();
+        for (int i = 0; i < 4; i++)
+        {
+            randomNum = ThreadLocalRandom.current().nextInt(0, 10000);
+            numberString.append(String.format(Locale.getDefault(), "%04d", randomNum));
+        }
+        return numberString.toString();
+    }
     
     public String getCardNoFormatted()
     {

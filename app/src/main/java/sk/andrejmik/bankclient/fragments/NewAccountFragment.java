@@ -1,6 +1,8 @@
 package sk.andrejmik.bankclient.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,13 +10,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,13 +28,16 @@ import com.google.android.material.snackbar.Snackbar;
 
 import sk.andrejmik.bankclient.R;
 import sk.andrejmik.bankclient.databinding.NewAccountFragmentBinding;
+import sk.andrejmik.bankclient.fragments.dialogs.NewCardFragmentDialog;
 import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.objects.Card;
 import sk.andrejmik.bankclient.utils.Event;
+import sk.andrejmik.bankclient.utils.Globals;
 import sk.andrejmik.bankclient.utils.LoadEvent;
 
 public class NewAccountFragment extends Fragment
 {
+    public static final int ADD_CARD_FRAGMENT_DIALOG_RESULT_CODE = 1;
     private Fragment mFragment;
     private NewAccountFragmentBinding mBinding;
     private NewAccountViewModel mViewModel;
@@ -80,6 +88,29 @@ public class NewAccountFragment extends Fragment
     }
     
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        switch (requestCode)
+        {
+            case ADD_CARD_FRAGMENT_DIALOG_RESULT_CODE:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Bundle bundle = data.getExtras();
+                    if (bundle == null)
+                    {
+                        return;
+                    }
+                    Card card = Globals.GSON.fromJson(bundle.getString("new_card"), Card.class);
+                    if (card == null)
+                    {
+                        return;
+                    }
+                    mViewModel.addCard(card);
+                }
+        }
+    }
+    
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -108,6 +139,7 @@ public class NewAccountFragment extends Fragment
         }
         setupObservers();
         setupSnacks();
+        setupListeners();
     }
     
     @Override
@@ -127,6 +159,36 @@ public class NewAccountFragment extends Fragment
                 break;
         }
         return true;
+    }
+    
+    private void setupListeners()
+    {
+        mBinding.buttonNewAccountAddCard.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                FragmentTransaction ft = requireFragmentManager().beginTransaction();
+                Fragment previous = getFragmentManager().findFragmentByTag("dialog");
+                if (previous != null)
+                {
+                    ft.remove(previous);
+                }
+                ft.addToBackStack(null);
+                DialogFragment newDeviceFragmentDialog = new NewCardFragmentDialog();
+                newDeviceFragmentDialog.setTargetFragment(mFragment, ADD_CARD_FRAGMENT_DIALOG_RESULT_CODE);
+                newDeviceFragmentDialog.show(ft, "dialog");
+            }
+        });
+        mBinding.listviewNewCards.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                mViewModel.removeCard(i);
+                return false;
+            }
+        });
     }
     
     private void setupSnacks()

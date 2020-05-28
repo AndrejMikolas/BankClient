@@ -72,36 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!--    <LinearLayout-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:orientation="horizontal"-->
-        <!--        android:baselineAligned="false">-->
-
-        <!--        <com.google.android.material.textfield.TextInputLayout-->
-        <!--            style="@style/textInputLayout"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_weight="1">-->
-
-        <!--            <com.google.android.material.textfield.TextInputEditText-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:hint="@string/expiration_month" />-->
-        <!--        </com.google.android.material.textfield.TextInputLayout>-->
-
-        <!--        <com.google.android.material.textfield.TextInputLayout-->
-        <!--            style="@style/textInputLayout"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_weight="1">-->
-
-        <!--            <com.google.android.material.textfield.TextInputEditText-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:hint="@string/expiration_year" />-->
-        <!--        </com.google.android.material.textfield.TextInputLayout>-->
-        <!--    </LinearLayout>-->
-
         <Button
+            android:id="@+id/button_new_account_add_card"
             style="@style/primary_button"
             android:text="@string/add_card" />
 
