@@ -54,15 +54,6 @@
                 android:text="@={account.owner.surname}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout style="@style/textInputLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/born"
-                android:text="@{account.owner.born.toString()}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <TextView
             style="@style/section_header"
             android:text="@string/cards" />

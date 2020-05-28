@@ -81,23 +81,6 @@
                         tools:text="Test User" />
                 </TableRow>
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp">
-
-                    <TextView
-                        style="@style/account_detail_key"
-                        android:drawableStart="@drawable/ic_date_range_black_24dp"
-                        android:text="@string/born" />
-
-                    <TextView
-                        android:id="@+id/owner_born"
-                        style="@style/account_detail_value"
-                        android:text="@{account.owner.born.toString()}"
-                        tools:text="01.01.1990" />
-                </TableRow>
-
             </TableLayout>
 
             <TextView

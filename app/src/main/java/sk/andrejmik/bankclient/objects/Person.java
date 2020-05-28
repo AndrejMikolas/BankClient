@@ -18,7 +18,4 @@ public class Person extends BaseEntity
     
     @SerializedName("surname")
     private String surname;
-    
-    @SerializedName("born")
-    private Date born;
 }
