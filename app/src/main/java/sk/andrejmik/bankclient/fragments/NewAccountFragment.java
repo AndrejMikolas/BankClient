@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -177,6 +178,15 @@ public class NewAccountFragment extends Fragment
                 DialogFragment newDeviceFragmentDialog = new NewCardFragmentDialog();
                 newDeviceFragmentDialog.setTargetFragment(mFragment, ADD_CARD_FRAGMENT_DIALOG_RESULT_CODE);
                 newDeviceFragmentDialog.show(ft, "dialog");
+            }
+        });
+        mBinding.listviewNewCards.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                mViewModel.removeCard(i);
+                return false;
             }
         });
     }

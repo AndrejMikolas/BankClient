@@ -44,9 +44,16 @@ public class NewAccountViewModel extends ViewModel
         mAccountLiveData.postValue(account);
     }
     
-    public void addCard(Card card)
+    void addCard(Card card)
     {
         Objects.requireNonNull(mAccountLiveData.getValue()).addCard(card);
+        /*To invoke notify Observers*/
+        mAccountLiveData.postValue(mAccountLiveData.getValue());
+    }
+    
+    void removeCard(int position)
+    {
+        Objects.requireNonNull(mAccountLiveData.getValue()).removeCard(position);
         /*To invoke notify Observers*/
         mAccountLiveData.postValue(mAccountLiveData.getValue());
     }
