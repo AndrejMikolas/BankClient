@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BankClient</string>
+    <string name="user_icon_avatar">Užívateľova ikona</string>
+    <string name="account_name">Názov účtu</string>
+    <string name="created_on">Vytvorený dňa</string>
+    <string name="owner">Vlastník</string>
+    <string name="born">Narodený</string>
+    <string name="cards">Kreditné karty</string>
+    <string name="card_expires">Expiruje %1$02d / %2$02d</string>
+    <string name="expired">expirovaná</string>
+    <string name="account_info">Informácie o účte</string>
+    <string name="owner_info">Informácie o vlastníkovi</string>
+    <string name="name">Meno</string>
+    <string name="surname">Priezvisko</string>
+    <string name="expiration_month">Mesiac expirácie</string>
+    <string name="expiration_year">Rok expirácie</string>
+    <string name="add_card">Pridať kartu</string>
+    <string name="save">Uložiť</string>
+    <string name="updated">Aktualizované</string>
+    <string name="network_error">Chyba siete</string>
+    <string name="unknown_error">Neznáma chyba</string>
+    <string name="retry">Obnoviť</string>
+    <string name="saving_dialog_message">Ukladám. Prosím počkajte…</string>
+    <string name="saved">Uložené</string>
+    <string name="deleting_account_dialog_message">Vymazávam účet. Prosím počkajte…</string>
+    <string name="required_field_error">Povinné</string>
+    <string name="new_card_dialog_instructions">Zadajte dátum expirácie karty. Číslo karty bude vygenerované automaticky</string>
+    <string name="deleted">Vymazané</string>
+    <string name="server_address">Adresa servera</string>
+    <string name="settings">Nastavenia</string>
+    <string name="port">Port</string>
+</resources>

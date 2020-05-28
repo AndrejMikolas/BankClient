@@ -14,6 +14,9 @@ import sk.andrejmik.bankclient.databinding.RowItemCardsListBinding;
 import sk.andrejmik.bankclient.objects.Card;
 import sk.andrejmik.bankclient.objects.Person;
 
+/**
+ * Recycler adapter for list of cards in account detail
+ */
 public class CardsListAdapter extends RecyclerView.Adapter<CardsListAdapter.CardViewHolder>
 {
     private List<Card> mCardList;

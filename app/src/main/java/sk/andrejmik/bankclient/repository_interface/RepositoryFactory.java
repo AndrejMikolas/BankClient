@@ -2,6 +2,9 @@ package sk.andrejmik.bankclient.repository_interface;
 
 import sk.andrejmik.bankclient.api_repository.ApiAccountRepository;
 
+/**
+ * Factory for creating specific repository
+ */
 public class RepositoryFactory
 {
     private static final RepositoryType mRepositoryType = RepositoryType.API;
@@ -13,7 +16,7 @@ public class RepositoryFactory
             case API:
                 return new ApiAccountRepository();
             default:
-                return new ApiAccountRepository();
+                return null;
         }
     }
     

@@ -25,8 +25,18 @@ import sk.andrejmik.bankclient.objects.Account;
 import sk.andrejmik.bankclient.repository_interface.IAccountRepository;
 import sk.andrejmik.bankclient.utils.Globals;
 
+/**
+ * Remote API repository for Accounts
+ */
 public class ApiAccountRepository implements IAccountRepository
 {
+    /**
+     * Get single Account observable by provided ID
+     *
+     * @param id ID of account to load from API
+     *
+     * @return Observable for account
+     */
     @Override
     public Observable<Account> get(Object id)
     {
@@ -67,6 +77,11 @@ public class ApiAccountRepository implements IAccountRepository
         }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
     
+    /**
+     * Get observable list of all accounts
+     *
+     * @return Observable list of all accounts
+     */
     @Override
     public Observable<List<Account>> getAll()
     {
@@ -110,6 +125,13 @@ public class ApiAccountRepository implements IAccountRepository
         }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
     
+    /**
+     * Save account to remote API and get it back with new ID
+     *
+     * @param data Account to save
+     *
+     * @return Saved account observable with generated ID
+     */
     @Override
     public Observable<Account> save(Account data)
     {
@@ -151,6 +173,13 @@ public class ApiAccountRepository implements IAccountRepository
         }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
     
+    /**
+     * Delete account in API as a observable
+     *
+     * @param id Account ID to delete
+     *
+     * @return Void observable
+     */
     @Override
     public Observable<Void> delete(Object id)
     {

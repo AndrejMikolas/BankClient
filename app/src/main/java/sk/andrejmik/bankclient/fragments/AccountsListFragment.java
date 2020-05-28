@@ -32,12 +32,17 @@ import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.RecyclerTouchListener;
 import sk.andrejmik.bankclient.utils.ViewHelper;
 
+/**
+ * Fragment with list of accounts
+ */
 public class AccountsListFragment extends Fragment
 {
     private AccountsListFragmentBinding mBinding;
     private Fragment mFragment;
     private AccountsListViewModel mViewModel;
     private AccountsAdapter mAccountsAdapter;
+    private Snackbar mSnackUnknownError, mSnackNetworkError;
+    /* Observing changes in accounts list in viewmodel */
     private Observer<List<Account>> mAccountListUpdateObserver = new Observer<List<Account>>()
     {
         @Override
@@ -48,7 +53,7 @@ public class AccountsListFragment extends Fragment
             mBinding.recyclerviewAccounts.setAdapter(mAccountsAdapter);
         }
     };
-    private Snackbar mSnackUnknownError, mSnackNetworkError;
+    /* Observing changes in loading accounts list event in viewmodel */
     private Observer<Event<LoadEvent>> mLoadAccountsEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override

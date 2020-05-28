@@ -30,6 +30,9 @@ import sk.andrejmik.bankclient.utils.Event;
 import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.ViewHelper;
 
+/**
+ * Fragment with account detail
+ */
 public class AccountDetailFragment extends Fragment
 {
     private Fragment mFragment;
@@ -38,6 +41,7 @@ public class AccountDetailFragment extends Fragment
     private String mAccountId;
     private Snackbar mSnackUnknownError, mSnackNetworkError;
     private ProgressDialog mProgressDialog;
+    /* Observing changes in account in viewmodel */
     private Observer<Account> mAccountObserver = new Observer<Account>()
     {
         @Override
@@ -49,6 +53,7 @@ public class AccountDetailFragment extends Fragment
             mBinding.recyclerviewCards.setAdapter(cardsListAdapter);
         }
     };
+    /* Observing changes in loading account event in viewmodel */
     private Observer<Event<LoadEvent>> mLoadAccountEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
@@ -91,6 +96,7 @@ public class AccountDetailFragment extends Fragment
             }
         }
     };
+    /* Observing changes in deleting account event in viewmodel */
     private Observer<Event<LoadEvent>> mDeleteAccountEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
@@ -198,9 +204,6 @@ public class AccountDetailFragment extends Fragment
         });
     }
     
-    /**
-     * Setting observers
-     */
     private void setupObservers()
     {
         mViewModel.getAccountLiveData().observe(getViewLifecycleOwner(), mAccountObserver);
@@ -221,6 +224,9 @@ public class AccountDetailFragment extends Fragment
         mSnackUnknownError.setAction(getResources().getString(R.string.retry), clickRetryLoadListener);
     }
     
+    /**
+     * Invoke method for loading new account from repository
+     */
     private void loadAccount()
     {
         mViewModel.loadAccount();

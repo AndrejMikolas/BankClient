@@ -5,17 +5,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import sk.andrejmik.bankclient.R;
 import sk.andrejmik.bankclient.databinding.FragmentDialogNewCardBinding;
@@ -23,7 +20,7 @@ import sk.andrejmik.bankclient.objects.Card;
 import sk.andrejmik.bankclient.utils.Globals;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Dialog fragment for adding new card to account
  */
 public class NewCardFragmentDialog extends DialogFragment
 {
@@ -50,6 +47,7 @@ public class NewCardFragmentDialog extends DialogFragment
                                                          @Override
                                                          public void onClick(DialogInterface dialogInterface, int i)
                                                          {
+                                                             /* Confirm new card - send new card in intent to calling fragment */
                                                              mBinding.invalidateAll();
                                                              newCard.setCardNo(Card.generateCardNo());
                                                              Intent intent = new Intent();

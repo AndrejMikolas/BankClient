@@ -16,7 +16,7 @@ import sk.andrejmik.bankclient.utils.Event;
 import sk.andrejmik.bankclient.utils.LoadEvent;
 import sk.andrejmik.bankclient.utils.NetworkHelper;
 
-public class AccountDetailViewModel extends ViewModel
+class AccountDetailViewModel extends ViewModel
 {
     MutableLiveData<Event<LoadEvent>> loadAccountEvent = new MutableLiveData<>();
     MutableLiveData<Event<LoadEvent>> deleteAccountEvent = new MutableLiveData<>();
@@ -32,16 +32,21 @@ public class AccountDetailViewModel extends ViewModel
         loadAccount();
     }
     
-    public MutableLiveData<Account> getAccountLiveData()
+    MutableLiveData<Account> getAccountLiveData()
     {
         return mAccountLiveData;
     }
     
-    public void loadAccount()
+    void loadAccount()
     {
         loadAccount(mParam);
     }
     
+    /**
+     * Load account info from repository by param
+     *
+     * @param accountId ID of account to load
+     */
     private void loadAccount(String accountId)
     {
         loadAccountEvent.postValue(new Event<>(LoadEvent.STARTED));
@@ -77,7 +82,10 @@ public class AccountDetailViewModel extends ViewModel
         });
     }
     
-    public void deleteAccount()
+    /**
+     * Delete current account
+     */
+    void deleteAccount()
     {
         deleteAccountEvent.postValue(new Event<>(LoadEvent.STARTED));
         if (!NetworkHelper.isNetworkAvailable())
@@ -113,11 +121,14 @@ public class AccountDetailViewModel extends ViewModel
         });
     }
     
+    /**
+     * Factory needed to parametrize creating @{@link AccountDetailViewModel}
+     */
     public static class AccountDetailViewModelFactory implements ViewModelProvider.Factory
     {
         private String mParam;
         
-        public AccountDetailViewModelFactory(String param)
+        AccountDetailViewModelFactory(String param)
         {
             mParam = param;
         }

@@ -30,12 +30,15 @@ public class AccountsListViewModel extends ViewModel
         loadAccounts();
     }
     
-    public MutableLiveData<List<Account>> getAccountsLiveData()
+    MutableLiveData<List<Account>> getAccountsLiveData()
     {
         return mListLiveData;
     }
     
-    public void loadAccounts()
+    /**
+     * Load accounts list from repository by param
+     */
+    void loadAccounts()
     {
         onEvent.postValue(new Event<>(LoadEvent.STARTED));
         if (!NetworkHelper.isNetworkAvailable())

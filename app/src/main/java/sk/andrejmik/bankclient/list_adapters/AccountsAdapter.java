@@ -13,6 +13,9 @@ import sk.andrejmik.bankclient.R;
 import sk.andrejmik.bankclient.databinding.RowItemAccountsListBinding;
 import sk.andrejmik.bankclient.objects.Account;
 
+/**
+ * Recycler adapter for list of accounts
+ */
 public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>
 {
     private List<Account> mAccountList;

@@ -35,13 +35,19 @@ import sk.andrejmik.bankclient.utils.Event;
 import sk.andrejmik.bankclient.utils.Globals;
 import sk.andrejmik.bankclient.utils.LoadEvent;
 
+/**
+ * Fragment for creating new account or edit existing
+ */
 public class NewAccountFragment extends Fragment
 {
-    public static final int ADD_CARD_FRAGMENT_DIALOG_RESULT_CODE = 1;
+    private static final int ADD_CARD_FRAGMENT_DIALOG_RESULT_CODE = 1;
     private Fragment mFragment;
     private NewAccountFragmentBinding mBinding;
     private NewAccountViewModel mViewModel;
     private ArrayAdapter<Card> mCardArrayAdapter;
+    private ProgressDialog mProgressDialog;
+    private Snackbar mSnackNetworkError, mSnackUnknownError;
+    /* Observing changes in account in viewmodel */
     private Observer<Account> mAccountObserver = new Observer<Account>()
     {
         @Override
@@ -53,8 +59,7 @@ public class NewAccountFragment extends Fragment
             mBinding.listviewNewCards.invalidate();
         }
     };
-    private ProgressDialog mProgressDialog;
-    private Snackbar mSnackNetworkError, mSnackUnknownError;
+    /* Observing changes in saving account event in viewmodel */
     private Observer<Event<LoadEvent>> mSaveAccountEventObserver = new Observer<Event<LoadEvent>>()
     {
         @Override
@@ -92,6 +97,7 @@ public class NewAccountFragment extends Fragment
     {
         switch (requestCode)
         {
+            /* On close dialog with new card created, add new card to account in viewmodel */
             case ADD_CARD_FRAGMENT_DIALOG_RESULT_CODE:
                 if (resultCode == Activity.RESULT_OK)
                 {
@@ -165,6 +171,9 @@ public class NewAccountFragment extends Fragment
     {
         mBinding.buttonNewAccountAddCard.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * Open new dialog for adding new card
+             */
             @Override
             public void onClick(View view)
             {
@@ -182,6 +191,9 @@ public class NewAccountFragment extends Fragment
         });
         mBinding.listviewNewCards.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
+            /**
+             * On long click on cards list card will be deleted
+             */
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
             {
@@ -191,6 +203,9 @@ public class NewAccountFragment extends Fragment
         });
     }
     
+    /**
+     * Creates and sets params of snackbars which will be used repeatedly
+     */
     private void setupSnacks()
     {
         mSnackNetworkError = Snackbar.make(mBinding.rootNewAccountFragment, getResources().getString(R.string.network_error), Snackbar.LENGTH_SHORT);

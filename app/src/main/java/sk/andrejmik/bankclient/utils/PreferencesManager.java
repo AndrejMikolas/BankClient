@@ -15,6 +15,8 @@ public class PreferencesManager
 {
     public static final String PREFERENCES_KEY_SERVER_ADDRESS = "server";
     public static final String PREFERENCES_KEY_SERVER_PORT = "port";
+    
+    /* Map structure to hold default values for each key */
     private static final Map<String, String> PREFERENCES_DEFAULTS = new HashMap<String, String>()
     {{
         put(PREFERENCES_KEY_SERVER_ADDRESS, "http://127.0.0.1");
@@ -36,6 +38,12 @@ public class PreferencesManager
     }
     //endregion
     
+    /**
+     * Save new value to shared preferences by key
+     *
+     * @param key   Where to save value
+     * @param value Value to save
+     */
     public static void putString(String key, String value)
     {
         SharedPreferences.Editor editor = getEditor();
@@ -43,6 +51,13 @@ public class PreferencesManager
         editor.apply();
     }
     
+    /**
+     * Get string from preferences or its default value
+     *
+     * @param key Key from where to get value
+     *
+     * @return Value from shared preferences or its default value
+     */
     public static String getString(String key)
     {
         SharedPreferences prefs = getSharedPreferences();

@@ -2,6 +2,9 @@ package sk.andrejmik.bankclient.utils;
 
 import androidx.databinding.InverseMethod;
 
+/**
+ * Helper converter for two-way binding of non-string types
+ */
 public class BindingConverter
 {
     //region INTEGER

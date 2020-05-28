@@ -14,7 +14,7 @@ import sk.andrejmik.bankclient.databinding.FragmentSettingsBinding;
 import sk.andrejmik.bankclient.utils.PreferencesManager;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment for settings
  */
 public class SettingsFragment extends Fragment
 {
@@ -22,9 +22,7 @@ public class SettingsFragment extends Fragment
     
     public SettingsFragment()
     {
-        // Required empty public constructor
     }
-    
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

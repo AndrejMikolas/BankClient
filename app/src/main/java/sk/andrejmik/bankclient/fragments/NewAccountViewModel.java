@@ -51,6 +51,11 @@ public class NewAccountViewModel extends ViewModel
         mAccountLiveData.postValue(mAccountLiveData.getValue());
     }
     
+    /**
+     * Remove card from cards list on desired position
+     *
+     * @param position Position of card in list to remove
+     */
     void removeCard(int position)
     {
         Objects.requireNonNull(mAccountLiveData.getValue()).removeCard(position);
@@ -58,6 +63,9 @@ public class NewAccountViewModel extends ViewModel
         mAccountLiveData.postValue(mAccountLiveData.getValue());
     }
     
+    /**
+     * Save account to repository
+     */
     void saveAccount()
     {
         onEvent.postValue(new Event<>(LoadEvent.STARTED));
