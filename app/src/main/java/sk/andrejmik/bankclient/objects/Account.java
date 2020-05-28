@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sk.andrejmik.bankclient.utils.Globals;
 
 @Getter
 @Setter
@@ -35,6 +36,15 @@ public class Account extends BaseEntity
     public void removeCard(int position)
     {
         this.cardsList.remove(position);
+    }
+    
+    public String getDateCreatedFormatted()
+    {
+        if (dateCreated != null)
+        {
+            return Globals.DATE_FORMAT.format(dateCreated);
+        }
+        return "";
     }
     
 }

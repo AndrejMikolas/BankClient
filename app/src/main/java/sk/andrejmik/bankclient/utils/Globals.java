@@ -11,5 +11,5 @@ public class Globals
 {
     public static final Gson GSON = new GsonBuilder().serializeNulls().setDateFormat("yyyy-MM-dd").create();
     
-    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM.dd.yyyy", Locale.getDefault());
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 }

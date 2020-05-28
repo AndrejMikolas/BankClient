@@ -69,6 +69,6 @@ public class Card extends BaseEntity
     @Override
     public String toString()
     {
-        return String.format(Locale.getDefault(), "%s - %02d/%02d", getCardNoFormatted(), expirationMonth + 1, expirationYear);
+        return String.format(Locale.getDefault(), "%s - %02d/%02d", getCardNoFormatted(), expirationMonth, expirationYear);
     }
 }
