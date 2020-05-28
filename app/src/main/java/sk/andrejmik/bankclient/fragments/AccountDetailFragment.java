@@ -108,7 +108,7 @@ public class AccountDetailFragment extends Fragment
                     break;
                 case COMPLETE:
                     mProgressDialog.dismiss();
-                    Toast.makeText(getContext(), getResources().getString(R.string.saved), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.deleted, Toast.LENGTH_SHORT).show();
                     NavHostFragment.findNavController(mFragment).navigate(R.id.action_accountDetailFragment_to_accountsListFragment);
                     break;
                 case STARTED:
