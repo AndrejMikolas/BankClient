@@ -9,7 +9,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -28,14 +27,10 @@ import sk.andrejmik.bankclient.utils.Globals;
 
 public class ApiAccountRepository implements IAccountRepository
 {
-    private static final String API_URL = "http://192.168.1.17:8080";
-//private static final String API_URL = "http://192.168.0.13:8080";
-//private static final String API_URL = "http://192.168.8.101:8080";
-    
     @Override
     public Observable<Account> get(Object id)
     {
-        String requestUrl = API_URL + "/accounts/detail/" + id.toString();
+        String requestUrl = ApiRepositoryConstants.getServerAddress() + "/accounts/detail/" + id.toString();
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder().url(requestUrl).get().build();
         
@@ -69,13 +64,13 @@ public class ApiAccountRepository implements IAccountRepository
                     }
                 });
             }
-        }).timeout(10, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
     
     @Override
     public Observable<List<Account>> getAll()
     {
-        String requestUrl = API_URL + "/accounts/list";
+        String requestUrl = ApiRepositoryConstants.getServerAddress() + "/accounts/list";
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder().url(requestUrl).get().build();
         
@@ -112,13 +107,13 @@ public class ApiAccountRepository implements IAccountRepository
                     }
                 });
             }
-        }).timeout(10, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
     
     @Override
     public Observable<Account> save(Account data)
     {
-        String requestUrl = API_URL + "/accounts/save";
+        String requestUrl = ApiRepositoryConstants.getServerAddress() + "/accounts/save";
         final OkHttpClient client = new OkHttpClient();
         String jsonBody = Globals.GSON.toJson(data);
         RequestBody body = RequestBody.create(ApiRepositoryConstants.JSON, jsonBody);
@@ -153,13 +148,13 @@ public class ApiAccountRepository implements IAccountRepository
                     }
                 });
             }
-        }).timeout(30, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
     
     @Override
     public Observable<Void> delete(Object id)
     {
-        String requestUrl = API_URL + "/accounts/remove/" + id.toString();
+        String requestUrl = ApiRepositoryConstants.getServerAddress() + "/accounts/remove/" + id.toString();
         final OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(null, new byte[0]);
         final Request request = new Request.Builder().url(requestUrl).post(body).build();
@@ -177,15 +172,10 @@ public class ApiAccountRepository implements IAccountRepository
                     }
                     
                     @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
+                    public void onResponse(@NotNull Call call, @NotNull Response response)
                     {
                         if (response.isSuccessful())
                         {
-                            String jsonBody = Objects.requireNonNull(response.body()).string();
-                            Type listType = new TypeToken<ArrayList<Account>>()
-                            {
-                            }.getType();
-                            List<Account> result = Globals.GSON.fromJson(jsonBody, listType);
                             emitter.onComplete();
                         }
                         else
@@ -195,6 +185,6 @@ public class ApiAccountRepository implements IAccountRepository
                     }
                 });
             }
-        }).timeout(10, TimeUnit.SECONDS).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
 }
